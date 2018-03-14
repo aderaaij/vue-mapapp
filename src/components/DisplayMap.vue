@@ -24,6 +24,7 @@ export default {
         zoom: 2,
         center: [-82.98509939999997, 12.2937504],
       });
+      map.resize();
     });
   },
 };
