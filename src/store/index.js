@@ -9,15 +9,17 @@ const SET_LOCATIONS = 'SET_LOCATIONS';
 const SET_MAPSTYLE = 'SET_MAPSTYLE';
 const SET_LOADING = 'SET_LOADING';
 const TOGGLE_LOADING = 'TOGGLE_LOADING';
+const SET_CENTER = 'SET_CENTER';
 
-const api = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/22914/map_dark-matter.json';
+const api =
+  'https://s3-us-west-2.amazonaws.com/s.cdpn.io/22914/map_dark-matter.json';
 
 Vue.use(Vuex);
 
 const state = {
-  mapStyle: {},
+  mapStyle: null,
   loading: true,
-  locations: [],
+  locations: null,
   zoom: 3,
   center: [-82.98509939999997, 12.2937504],
 };
@@ -25,6 +27,7 @@ const state = {
 const getters = {
   mapStyle: state => state.mapStyle,
   mapLocations: state => state.locations,
+  mapCenter: state => state.center,
 };
 
 const actions = {
@@ -48,6 +51,11 @@ const actions = {
     });
   },
 
+  getCenter({ commit }, position) {
+    console.log(position);
+    commit(SET_CENTER, position);
+  },
+
   toggleLoading({ state, commit }) {
     console.log(state.loading);
     commit(TOGGLE_LOADING, state.loading);
@@ -66,6 +74,9 @@ const mutations = {
   },
   [SET_LOCATIONS](state, geoData) {
     state.locations = geoData;
+  },
+  [SET_CENTER](state, center) {
+    state.center = center;
   },
 };
 
