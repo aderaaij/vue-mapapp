@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "mapbox-gl": "^0.44.1",
+    "normalize.css": "^8.0.0",
     "vue": "^2.5.13",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"

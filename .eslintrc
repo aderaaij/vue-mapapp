@@ -1,7 +1,13 @@
 {
   "root": true,
   "extends": [
-    "plugin:vue/essential",
-    "@vue/prettier"
-  ]
+    "plugin:vue/recommended"
+    
+  ],
+  "rules": {
+    "indent": [
+      "error",
+      2
+    ]
+  }
 }

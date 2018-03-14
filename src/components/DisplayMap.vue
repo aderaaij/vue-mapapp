@@ -6,28 +6,30 @@
 <script>
 import mapboxgl from 'mapbox-gl';
 import { mapState, mapGetters, mapActions } from 'vuex';
+
 export default {
   computed: {
-    ...mapState(['loading']),
+    ...mapState(['loading', 'mapStyle']),
   },
+
   methods: {
-    ...mapActions({
-      get: 'getMapStyle',
-    }),
+    ...mapActions(['getMapStyle']),
   },
+
   mounted() {
-    this.get().then(() => {
-      console.log(mapState({ bla: 'mapStyle' }));
+    this.getMapStyle().then(() => {
       const map = new mapboxgl.Map({
         container: this.$refs.mapdiv,
         style: this.mapStyle,
+        zoom: 2,
+        center: [-82.98509939999997, 12.2937504],
       });
     });
   },
 };
 </script>
 <style lang="scss">
-@import '~/mapboxgl/dist/mapbox-gl.css';
+@import '~mapbox-gl/dist/mapbox-gl.css';
 .mapdiv {
   width: 100vw;
   height: 100vh;
