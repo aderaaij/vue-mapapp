@@ -6,7 +6,7 @@
       :locations="locations"
       :map-options="{
         style: mapStyle,
-        center: [-96, 37.8],
+        center: mapCenter,
         zoom: 3
       }"
       @map-load="mapLoaded"
@@ -18,27 +18,35 @@
 
 <script>
 import { mapState, mapGetters, mapActions } from 'vuex';
+
 import MapboxMap from '@/components/MapboxMap';
 
 export default {
   name: 'Home',
+
   components: {
     MapboxMap,
   },
+
   computed: {
     ...mapState(['loading', 'mapStyle', 'locations']),
     ...mapGetters(['mapCenter']),
   },
+
   methods: {
     ...mapActions(['getMapStyle', 'getLocations', 'toggleLoading']),
+
     mapLoaded(map) {
       console.log(map);
     },
+
     mapClicked(map, e) {
-      map.flyTo({
-        center: this.mapCenter,
-        zoom: 11,
-      });
+      if (e.originalEvent.target.tagName !== 'CANVAS') {
+        map.flyTo({
+          center: this.mapCenter,
+          zoom: 11,
+        });
+      }
     },
   },
   mounted() {
