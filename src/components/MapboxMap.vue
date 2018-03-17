@@ -124,7 +124,7 @@ export default {
 <style lang="scss">
 @import '~mapbox-gl/dist/mapbox-gl.css';
 .mapWrapper {
-  width: 100vw;
+  width: 70vw;
   height: 100vh;
 }
 
