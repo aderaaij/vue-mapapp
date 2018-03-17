@@ -61,9 +61,9 @@ const actions = {
     commit(types.TOGGLE_DATA_LOADED, state.dataLoaded);
   },
 
-  toggleLocationHover({ state, commit }, position) {
-    commit(types.TOGGLE_LOCATION_HOVER, state.locationHover);
-    commit(types.SET_CENTER, position);
+  toggleLocationHover({ state, commit }, { active, coordinates }) {
+    commit(types.TOGGLE_LOCATION_HOVER, active);
+    commit(types.SET_CENTER, coordinates);
   },
 
   setExcerptId({ state, commit }, id) {
@@ -91,7 +91,7 @@ const mutations = {
     state.excerptId = excerptId;
   },
   [types.TOGGLE_LOCATION_HOVER](state, locationHover) {
-    state.locationHover = !locationHover;
+    state.locationHover = locationHover;
   },
 };
 
