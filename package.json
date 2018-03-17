@@ -12,6 +12,7 @@
     "mapbox-gl": "^0.44.1",
     "normalize.css": "^8.0.0",
     "popmotion": "^8.1.21",
+    "popmotion-pose": "^0.2.2",
     "vue": "^2.5.13",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
