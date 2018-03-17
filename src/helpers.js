@@ -26,3 +26,82 @@ export function getWindowXYSize() {
   windowXY.push(x, y);
   return windowXY;
 }
+
+export function getClosest(elem, selector) {
+  if (!Element.prototype.matches) {
+    Element.prototype.matches =
+      Element.prototype.matchesSelector ||
+      Element.prototype.mozMatchesSelector ||
+      Element.prototype.msMatchesSelector ||
+      Element.prototype.oMatchesSelector ||
+      Element.prototype.webkitMatchesSelector ||
+      function(s) {
+        var matches = (this.document || this.ownerDocument).querySelectorAll(s),
+          i = matches.length;
+        while (--i >= 0 && matches.item(i) !== this) {}
+        return i > -1;
+      };
+  }
+  for (; elem && elem !== document; elem = elem.parentNode) {
+    if (elem.matches(selector)) return elem;
+  }
+  return null;
+}
+
+// ➡️ Offset the map when a marker is too close to the edge for all sides but the bottom
+export function offSetMarker(marker, markerGrowSize, map) {
+  /* 
+   * Set the max width and height of the marker and shrink it a bit by multiplying with 0.x. 
+   * This is to compensate for padding around the marker
+   */
+
+  const markerMaxWidth = marker.offsetWidth * markerGrowSize * 0.55;
+  const markerMaxHeight = marker.offsetHeight * markerGrowSize * 0.7;
+  const markerOffSetX = getComputedTranslateXY(marker.parentNode)[0];
+  const markerOffSetY = getComputedTranslateXY(marker.parentNode)[1];
+  if (
+    markerOffSetY < markerMaxHeight ||
+    markerOffSetX < markerMaxWidth ||
+    getWindowXYSize()[0] - markerOffSetX < markerMaxWidth + marker.offsetWidth
+  ) {
+    let offSetY = 0;
+    let offSetX = 0;
+
+    if (markerOffSetY < markerMaxHeight) {
+      offSetY = markerOffSetY - markerMaxHeight;
+    }
+
+    if (markerOffSetX < markerMaxWidth) {
+      offSetX = markerOffSetX - markerMaxWidth;
+    }
+    // Add `marker.offsetWidth` to this calculation because the position is calculated from top-left
+    if (
+      getWindowXYSize()[0] - markerOffSetX <
+      markerMaxWidth + marker.offsetWidth
+    ) {
+      offSetX =
+        markerMaxWidth +
+        marker.offsetWidth -
+        (getWindowXYSize()[0] - markerOffSetX);
+    }
+
+    map.panBy([offSetX, offSetY]);
+  }
+}
+
+/**
+ * Dank function to keep track of animations / timelines by registering them,
+ * gives us the option to stop them when needed
+ */
+export const playback = () => {
+  const animations = [];
+  return {
+    register: animation => {
+      animations.push(animation);
+    },
+    stop: () => {
+      animations.forEach(animation => animation.stop());
+      animations.length = 0;
+    },
+  };
+};
