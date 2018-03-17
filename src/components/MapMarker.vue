@@ -74,7 +74,7 @@ export default {
 
   data() {
     return {
-      active: false,
+      markerActive: false,
     };
   },
 
@@ -93,10 +93,14 @@ export default {
     ...mapGetters(['getExcerptId']),
     checkIfActive() {
       if (this.id === this.getExcerptId) {
+        this.markerActive = true;
         return true;
-      } else {
-        return false;
       }
+      this.markerActive = false;
+      return false;
+    },
+    markerStyler() {
+      return css(this.$el);
     },
   },
 
@@ -108,13 +112,15 @@ export default {
           to: 3,
           stiffness: 300,
           damping: 10,
-        }).start(css(this.$el).set('scale'));
+        }).start(this.markerStyler.set('scale'));
       } else {
+        // if (this.markerActive === true) {
         // spring({
         //   to: 1,
         //   stiffness: 300,
         //   damping: 10,
-        // }).start(css(this.$el).set('scale'));
+        // }).start(this.markerStyler.set('scale'));
+        // }
       }
     },
   },
