@@ -2,9 +2,9 @@
   <div 
     @mouseenter="setActive(location)"
     class="listItem"
-    :class="[checkIfActive ? 'listItem--active' : '']">
+    :class="[isActive ? 'listItem--active' : '']">
     <h3>{{ location.properties.title }}</h3>
-    <img :src="location.properties.imageUrl">
+    <img :src="images.medium">
   </div>
 </template>
 
@@ -20,18 +20,26 @@ export default {
 
   computed: {
     ...mapGetters(['getExcerptId']),
-    checkIfActive() {
+
+    isActive() {
       if (this.location.properties.id === this.getExcerptId) {
         return true;
       }
       return false;
+    },
+
+    images() {
+      return this.location.properties.images;
     },
   },
 
   methods: {
     ...mapActions(['setCenter', 'toggleLocationHover', 'setExcerptId']),
     setActive(location) {
-      this.toggleLocationHover(location.geometry.coordinates);
+      this.toggleLocationHover({
+        active: true,
+        coordinates: location.geometry.coordinates,
+      });
       this.setExcerptId(location.properties.id);
     },
   },
