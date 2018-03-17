@@ -64,12 +64,12 @@ export default {
     },
 
     onMapClicked(map, e) {
-      // if (e.originalEvent.target.tagName !== 'CANVAS') {
-      //   map.flyTo({
-      //     center: this.getCenter,
-      //     zoom: 11,
-      //   });
-      // }
+      if (e.originalEvent.target.tagName !== 'CANVAS') {
+        map.flyTo({
+          center: this.getCenter,
+          zoom: 11,
+        });
+      }
     },
   },
   mounted() {
@@ -78,16 +78,16 @@ export default {
     });
   },
   updated() {
-    // if (this.dataLoaded && this.mapLoaded && this.locationHover) {
-    //   this.map.flyTo({
-    //     center: this.getCenter,
-    //     speed: 0.9,
-    //     zoom: 6,
-    //   });
-    //   this.map.on('moveend', e => {
-    //     this.toggleLocationHover();
-    //   });
-    // }
+    if (this.dataLoaded && this.mapLoaded && this.locationHover) {
+      this.map.flyTo({
+        center: this.getCenter,
+        speed: 0.5,
+        // zoom: 6,
+      });
+      this.map.on('moveend', e => {
+        this.toggleLocationHover(false);
+      });
+    }
   },
 };
 </script>
