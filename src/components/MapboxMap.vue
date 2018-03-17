@@ -4,17 +4,15 @@
       class='mapWrapper'
       :id="(mapOptions.hasOwnProperty('container') ? mapOptions.container : 'map')"
       :ref="'mapdiv'">
-      <div
+      <div        
         v-for="location in locations.features"
-        :location="location"
-        :position="location.geometry.coordinates"
-        :key="location.title"
+        :key="location.properties.id"
         :ref="'markers'"
-        :center="center"
-        @click="getCenter(location.geometry.coordinates)">
+        @click="setCenter(location.geometry.coordinates)">
         <map-marker 
+          :class="showMarkers ? 'marker--visible' : 'marker--hidden'"
           :iconType="location.properties.type"
-          
+          :id="location.properties.id"
           />
       </div>
     </div>
@@ -27,6 +25,10 @@ import MapMarker from './MapMarker';
 export default {
   components: {
     MapMarker,
+  },
+
+  data() {
+    return { showMarkers: false };
   },
 
   props: {
@@ -45,44 +47,44 @@ export default {
   },
 
   computed: {
-    ...mapState(['zoom', 'center']),
+    ...mapState(['zoom', 'center', 'mapLoaded']),
+    ...mapGetters({
+      myState: 'getCenter',
+    }),
   },
 
   mounted() {
-    //Initialze Map
     const map = this.mapInit();
-    //Add Controls to map
-    // this.addControls(map);
-    //Register Map Events
-    this.registerEvents(map);
+    const bounds = new mapboxgl.LngLatBounds();
+
+    this.registerEvents(map, bounds);
+    this.addMarkers(map, bounds);
+    console.log('my state', this.myState);
   },
 
   methods: {
-    ...mapActions(['getCenter']),
+    ...mapActions(['setCenter']),
+
+    mapTest() {
+      console.log('my state', this.myState);
+    },
+
     mapInit() {
-      //Add container to options object
       if (!this.mapOptions.hasOwnProperty('container')) {
         this.mapOptions.container = 'map';
       }
-      //New Mapbox Instance
       const map = new mapboxgl.Map(this.mapOptions);
-      //Emit init event passing map object
+
       this.$emit('map-init', map);
       return map;
     },
-    registerEvents(map) {
+
+    registerEvents(map, bounds) {
       // Load Event
       map.on('load', () => {
-        // Emit evet usable in parent compontent
         this.$emit('map-load', map);
-
-        // Add locations
-        this.locations.features.forEach((item, i) => {
-          const markerRef = this.$refs.markers[i];
-          new mapboxgl.Marker(this.$refs.markers[i], { offset: [0, -30] })
-            .setLngLat(item.geometry.coordinates)
-            .addTo(map);
-        });
+        this.showMarkers = true;
+        this.fitBounds(map, bounds);
       });
 
       //Map Mouse Move
@@ -90,14 +92,32 @@ export default {
         this.$emit('map-mousemove', map, e);
       });
 
+      //Map Move End
+      map.on('moveend', e => {
+        this.$emit('map-moveend', map, e);
+      });
+
       //Map Clicked
       map.on('click', e => {
         this.$emit('map-click', map, e);
       });
     },
-  },
-  updated() {
-    console.log('updated');
+
+    addMarkers(map, bounds) {
+      this.locations.features.forEach((item, i) => {
+        const markerRef = this.$refs.markers[i];
+        new mapboxgl.Marker(markerRef, { offset: [0, -30] })
+          .setLngLat(item.geometry.coordinates)
+          .addTo(map);
+        bounds.extend(item.geometry.coordinates);
+      });
+    },
+
+    fitBounds(map, bounds) {
+      map.fitBounds(bounds, {
+        padding: { top: 50, bottom: 50, left: 50, right: 50 },
+      });
+    },
   },
 };
 </script>
@@ -106,6 +126,18 @@ export default {
 .mapWrapper {
   width: 100vw;
   height: 100vh;
+}
+
+.marker {
+  display: block;
+
+  &--visible {
+    display: block;
+  }
+
+  &--hidden {
+    display: none;
+  }
 }
 </style>
 

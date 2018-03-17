@@ -1,23 +1,50 @@
 <template>
-  <svg class="e-marker" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 72 130.7" width="36">
+  <svg 
+    class="e-marker"
+    v-bind="animateMarker()"
+    :class="[checkIfActive ? 'e-marker--active' : '']"
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    x="0px"
+    y="0px"
+    viewBox="0 0 72 130.7"
+    width="36">
     <defs>
-        <clipPath id="circle">
-            <path d="M36,97.4c15,0,27.3-12.2,27.3-27.3c0-15-12.2-27.3-27.3-27.3S8.7,55.1,8.7,70.2S21,97.4,36,97.4z"/>
-        </clipPath>
+      <clipPath id="circle">
+        <path d="M36,97.4c15,0,27.3-12.2,27.3-27.3c0-15-12.2-27.3-27.3-27.3S8.7,55.1,8.7,70.2S21,97.4,36,97.4z"/>
+      </clipPath>
     </defs>
-    <path fill="currentColor" class="e-marker__marker" d="M60.7,45.4C54.1,38.8,45.3,35.2,36,35.2c-9.3,0-18.1,3.6-24.7,10.3C4.6,52,1,60.8,1,70.2c0,6.3,1.5,11.6,4.6,16.7
+    <path 
+      fill="currentColor"
+      class="e-marker__marker"
+      d="M60.7,45.4C54.1,38.8,45.3,35.2,36,35.2c-9.3,0-18.1,3.6-24.7,10.3C4.6,52,1,60.8,1,70.2c0,6.3,1.5,11.6,4.6,16.7
     C8.4,91.3,12.1,95,16,98.9c7.3,7.2,15.5,15.4,19,30.5c0.1,0.5,0.5,0.8,1,0.8s0.9-0.3,1-0.8c3.5-15.1,11.7-23.3,19-30.5
     c3.9-3.9,7.6-7.6,10.4-12.1c3.1-5.1,4.6-10.3,4.6-16.7C71,60.8,67.4,52,60.7,45.4z M36,97.4c-15,0-27.3-12.2-27.3-27.3
     S21,42.9,36,42.9c15,0,27.3,12.2,27.3,27.3C63.3,85.2,51,97.4,36,97.4z"/>
-    <path fill="transparent" class="e-marker__circle" d="M36,97.4c15,0,27.3-12.2,27.3-27.3c0-15-12.2-27.3-27.3-27.3S8.7,55.1,8.7,70.2S21,97.4,36,97.4z"/>
-    <path v-if="iconType === 'city'" class="e-marker__icon e-marker__icon--city" d="M41.1,68.7V58.5L36,53.4l-5.1,5.1v3.4H20.8v23.7h30.5V68.7H41.1z M27.5,82.2h-3.4v-3.4h3.4V82.2z M27.5,75.4h-3.4
+    <path 
+      fill="transparent"
+      class="e-marker__circle"
+      d="M36,97.4c15,0,27.3-12.2,27.3-27.3c0-15-12.2-27.3-27.3-27.3S8.7,55.1,8.7,70.2S21,97.4,36,97.4z"/>
+    <path
+      v-if="iconType === 'city'"
+      class="e-marker__icon e-marker__icon--city"
+      d="M41.1,68.7V58.5L36,53.4l-5.1,5.1v3.4H20.8v23.7h30.5V68.7H41.1z M27.5,82.2h-3.4v-3.4h3.4V82.2z M27.5,75.4h-3.4
 	V72h3.4V75.4z M27.5,68.7h-3.4v-3.4h3.4V68.7z M37.7,82.2h-3.4v-3.4h3.4V82.2z M37.7,75.4h-3.4V72h3.4V75.4z M37.7,68.7h-3.4v-3.4
 	h3.4V68.7z M37.7,61.9h-3.4v-3.4h3.4V61.9z M47.9,82.2h-3.4v-3.4h3.4V82.2z M47.9,75.4h-3.4V72h3.4V75.4z"/>
-    <path v-else-if="iconType === 'beach'" class="e-marker__icon e-marker__icon--beach" d="M38.3,74.8l2.9-2.9L54,84.8l-2.9,2.9L38.3,74.8z M46.8,63.3l5.7-5.7c-7.9-7.9-20.7-7.9-28.6,0C31.8,55,40.6,57.1,46.8,63.3z
+    <path 
+      v-else-if="iconType === 'beach'"
+      class="e-marker__icon e-marker__icon--beach"
+      d="M38.3,74.8l2.9-2.9L54,84.8l-2.9,2.9L38.3,74.8z M46.8,63.3l5.7-5.7c-7.9-7.9-20.7-7.9-28.6,0C31.8,55,40.6,57.1,46.8,63.3z
      M23.9,57.6c-7.9,7.9-7.9,20.7,0,28.6l5.7-5.7C23.4,74.2,21.3,65.5,23.9,57.6z M23.9,57.6L23.9,57.6c-0.8,6,2.3,13.8,8.6,20.1
     L44,66.2C37.7,59.9,30,56.8,23.9,57.6z"/>
-    <path v-else-if="iconType === 'mountain'" class="e-marker__icon e-marker__icon--mountain" d="M39.5,58.8l-6.6,8.8l5,6.7l-2.8,2.1c-3-3.9-7.9-10.5-7.9-10.5l-10.5,14h38.6L39.5,58.8z"/>
-    <g v-else-if="iconType === 'jungle'" class="e-marker__icon e-marker__icon--jungle">
+    <path 
+      v-else-if="iconType === 'mountain'"
+      class="e-marker__icon e-marker__icon--mountain"
+      d="M39.5,58.8l-6.6,8.8l5,6.7l-2.8,2.1c-3-3.9-7.9-10.5-7.9-10.5l-10.5,14h38.6L39.5,58.8z"/>
+    <g 
+      v-else-if="iconType === 'jungle'"
+      class="e-marker__icon e-marker__icon--jungle">
 	    <path d="M50.1,81.9c-1.7-2.8-2.8-6.1-5.6-8c1.6-0.2,3.2,0.1,4.6-0.5c2.3-0.9,3.2-3.9,2.7-6.3c-0.5-2.5-2.1-4.5-3.7-6.5
 		c-0.8-1.1-1.6-2.1-2.5-3.2c-1.3,2.9,0.1,6.6-1.4,9.4c-0.3,0.5-0.8,1-1.4,0.8c-0.6-0.3-0.3-1.3,0-1.9c1.4-2.5,1.8-5.6,1.3-8.4
 		c-0.1-0.5-0.3-1.1-0.6-1.5c-0.3-0.4-0.8-0.7-1.3-0.9c-1.5-0.8-3.1-1.3-4.8-1.6c1.3,1.6,1.6,3.9,1.8,6c0.2,1.7,0.3,3.7-0.9,4.9
@@ -39,30 +66,72 @@
   </svg>
 </template>
 <script>
-import { mapActions } from 'vuex';
-import mapboxgl from 'mapbox-gl';
+import { mapActions, mapGetters } from 'vuex';
+import { css, tween, spring, styler, physics } from 'popmotion';
 
 export default {
   name: 'MapMarker',
+
+  data() {
+    return {
+      active: false,
+    };
+  },
+
   props: {
     iconType: {
       required: true,
       type: String,
     },
+    id: {
+      required: true,
+      type: Number,
+    },
   },
+
+  computed: {
+    ...mapGetters(['getExcerptId']),
+    checkIfActive() {
+      if (this.id === this.getExcerptId) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+  },
+
   methods: {
-    ...mapActions(['getCenter']),
-  },
-  mounted() {
-    this.getCenter([-82.98509939999997, 12.2937504]);
+    animateMarker() {
+      if (this.checkIfActive) {
+        spring({
+          from: 1,
+          to: 3,
+          stiffness: 300,
+          damping: 10,
+        }).start(css(this.$el).set('scale'));
+      } else {
+        // spring({
+        //   to: 1,
+        //   stiffness: 300,
+        //   damping: 10,
+        // }).start(css(this.$el).set('scale'));
+      }
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
-svg {
-  fill: #fff;
-  color: #fff;
-  cursor: pointer;
+.e-marker {
+  & {
+    fill: #fff;
+    color: #fff;
+    cursor: pointer;
+    transform-origin: bottom center;
+  }
+
+  &--active {
+    fill: purple;
+  }
 }
 </style>

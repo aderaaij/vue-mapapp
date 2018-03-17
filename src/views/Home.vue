@@ -1,58 +1,93 @@
 <template>
   <div class="home">
-    <mapbox-map 
-      v-if="!loading"
-      :mapStyle="mapStyle"
-      :locations="locations"
-      :map-options="{
-        style: mapStyle,
-        center: mapCenter,
-        zoom: 3
-      }"
-      @map-load="mapLoaded"
-      @map-click="mapClicked"
-    />
+    <div v-if="dataLoaded" >
+      <mapbox-map 
+        :mapStyle="mapStyle"
+        :locations="locations"
+        :map-options="{
+          style: mapStyle,
+          center: getCenter,
+          zoom: 3
+        }"
+        @map-load="onMapLoaded"
+        @map-click="onMapClicked"
+      />
+      <locations-list :locations="locations.features"/>    
+    </div>
     <p v-else>loading</p>
   </div>
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
 
 import MapboxMap from '@/components/MapboxMap';
+import LocationsList from '@/components/LocationsList';
 
 export default {
   name: 'Home',
 
   components: {
     MapboxMap,
+    LocationsList,
   },
 
   computed: {
-    ...mapState(['loading', 'mapStyle', 'locations']),
-    ...mapGetters(['mapCenter']),
+    ...mapState([
+      'dataLoaded',
+      'mapLoaded',
+      'mapStyle',
+      'locations',
+      'locationHover',
+    ]),
+    ...mapGetters(['getCenter']),
   },
 
   methods: {
-    ...mapActions(['getMapStyle', 'getLocations', 'toggleLoading']),
+    ...mapActions([
+      'setMapStyle',
+      'setLocations',
+      'toggleDataLoaded',
+      'toggleMapLoaded',
+      'toggleLocationHover',
+    ]),
 
-    mapLoaded(map) {
-      console.log(map);
+    onMapLoaded(map) {
+      this.toggleMapLoaded();
+      this.map = map;
     },
 
-    mapClicked(map, e) {
-      if (e.originalEvent.target.tagName !== 'CANVAS') {
-        map.flyTo({
-          center: this.mapCenter,
-          zoom: 11,
-        });
-      }
+    flyTo() {
+      this.map.flyTo({
+        center: this.getCenter,
+      });
+    },
+
+    onMapClicked(map, e) {
+      // if (e.originalEvent.target.tagName !== 'CANVAS') {
+      //   map.flyTo({
+      //     center: this.getCenter,
+      //     zoom: 11,
+      //   });
+      // }
     },
   },
   mounted() {
-    Promise.all([this.getMapStyle(), this.getLocations()]).then(() => {
-      this.toggleLoading();
+    Promise.all([this.setMapStyle(), this.setLocations()]).then(() => {
+      this.toggleDataLoaded();
     });
+  },
+  updated() {
+    // if (this.dataLoaded && this.mapLoaded && this.locationHover) {
+    //   this.map.flyTo({
+    //     center: this.getCenter,
+    //     speed: 0.9,
+    //     zoom: 6,
+    //   });
+    //   this.map.on('moveend', e => {
+    //     this.toggleLocationHover();
+    //   });
+    // }
   },
 };
 </script>
