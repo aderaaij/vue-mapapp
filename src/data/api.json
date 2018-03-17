@@ -6,8 +6,11 @@
       "properties":{
         "id": 1,
         "title":"San Blas Islands",
-        "imageThumb":"https://c1.staticflickr.com/5/4241/35467523155_346b08810f_q.jpg",
-        "imageUrl":"https://c1.staticflickr.com/5/4241/35467523155_346b08810f.jpg",
+        "images": {          
+          "thumb":"https://c1.staticflickr.com/5/4241/35467523155_346b08810f_q.jpg",
+          "small":"https://c1.staticflickr.com/5/4241/35467523155_346b08810f_n.jpg",
+          "medium":"https://c1.staticflickr.com/5/4241/35467523155_346b08810f.jpg"
+        },
         "type":"beach",
         "iconSize":[
           60,
@@ -27,8 +30,11 @@
       "properties":{
         "id": 2,
         "title":"San Juan Del Sur",
-        "imageThumb":"https://c1.staticflickr.com/5/4379/36844732181_78bd19e9eb_q.jpg",
-        "imageUrl":"https://c1.staticflickr.com/5/4379/36844732181_78bd19e9eb.jpg",
+        "images": {          
+          "thumb":"https://c1.staticflickr.com/5/4379/36844732181_78bd19e9eb_q.jpg",
+          "small":"https://c1.staticflickr.com/5/4379/36844732181_78bd19e9eb_n.jpg",
+          "medium":"https://c1.staticflickr.com/5/4379/36844732181_78bd19e9eb.jpg"
+        },
         "type":"beach",
         "iconSize":[
           50,
@@ -48,8 +54,11 @@
       "properties":{
         "id": 3,
         "title":"Little Corn Island",
-        "imageThumb":"https://c1.staticflickr.com/5/4348/36844765631_03e90607bd_q.jpg",
-        "imageUrl":"https://c1.staticflickr.com/5/4348/36844765631_03e90607bd.jpg",
+        "images": {          
+          "thumb":"https://c1.staticflickr.com/5/4348/36844765631_03e90607bd_q.jpg",
+          "small":"https://c1.staticflickr.com/5/4348/36844765631_03e90607bd_n.jpg",
+          "medium":"https://c1.staticflickr.com/5/4348/36844765631_03e90607bd.jpg"
+        },
         "type":"beach",
         "iconSize":[
           40,
@@ -69,8 +78,11 @@
       "properties":{
         "id": 4,
         "title":"San Salvador",
-        "imageThumb":"https://c1.staticflickr.com/5/4333/36825444362_4291ce6d1e_q.jpg",
-        "imageUrl":"https://c1.staticflickr.com/5/4333/36825444362_4291ce6d1e.jpg",
+        "images": {          
+          "thumb":"https://c1.staticflickr.com/5/4333/36825444362_4291ce6d1e_q.jpg",
+          "small":"https://c1.staticflickr.com/5/4333/36825444362_4291ce6d1e_n.jpg",
+          "medium":"https://c1.staticflickr.com/5/4333/36825444362_4291ce6d1e.jpg"
+        },
         "type":"city",
         "iconSize":[
           40,
@@ -90,8 +102,11 @@
       "properties":{
         "id": 5,
         "title":"Monteverde",
-        "imageThumb":"https://c1.staticflickr.com/5/4347/36857337771_d1bb7f798a_q.jpg",
-        "imageUrl":"https://c1.staticflickr.com/5/4347/36857337771_d1bb7f798a.jpg",
+        "images": {          
+          "thumb":"https://c1.staticflickr.com/5/4347/36857337771_d1bb7f798a_q.jpg",
+          "small":"https://c1.staticflickr.com/5/4347/36857337771_d1bb7f798a_n.jpg",
+          "medium":"https://c1.staticflickr.com/5/4347/36857337771_d1bb7f798a.jpg"
+        },
         "type":"jungle",
         "iconSize":[
           40,
@@ -111,8 +126,11 @@
       "properties":{
         "id": 6,
         "title":"Volcano Acatenango",
-        "imageThumb":"https://c1.staticflickr.com/5/4421/36997408855_bfdb9f1fba_q.jpg",
-        "imageUrl":"https://c1.staticflickr.com/5/4421/36997408855_bfdb9f1fba.jpg",
+        "images": {          
+          "thumb":"https://c1.staticflickr.com/5/4421/36997408855_bfdb9f1fba_q.jpg",
+          "small":"https://c1.staticflickr.com/5/4421/36997408855_bfdb9f1fba_n.jpg",
+          "medium":"https://c1.staticflickr.com/5/4421/36997408855_bfdb9f1fba.jpg"
+        },
         "type":"mountain"
       },
       "geometry":{
@@ -128,8 +146,11 @@
       "properties":{
         "id": 7,
         "title":"Mexico City",
-        "imageThumb":"https://c1.staticflickr.com/5/4388/36837224452_98940aa9e4_q.jpg",
-        "imageUrl":"https://c1.staticflickr.com/5/4388/36837224452_98940aa9e4.jpg",
+        "images": {          
+          "thumb":"https://c1.staticflickr.com/5/4388/36837224452_98940aa9e4_q.jpg",
+          "small":"https://c1.staticflickr.com/5/4388/36837224452_98940aa9e4_n.jpg",
+          "medium":"https://c1.staticflickr.com/5/4388/36837224452_98940aa9e4.jpg"
+        },
         "type":"city"
       },
       "geometry":{
@@ -145,8 +166,11 @@
       "properties":{
         "id": 8,
         "title":"Oaxaca City",
-        "imageThumb":"https://c1.staticflickr.com/5/4357/36172707494_2b8ea05f04_q.jpg",
-        "imageUrl":"https://c1.staticflickr.com/5/4357/36172707494_2b8ea05f04.jpg",
+        "images": {
+          "thumb": "https://c1.staticflickr.com/5/4357/36172707494_2b8ea05f04_q.jpg",
+          "small": "https://c1.staticflickr.com/5/4357/36172707494_2b8ea05f04_n.jpg",
+          "medium": "https://c1.staticflickr.com/5/4357/36172707494_2b8ea05f04.jpg"
+        },
         "type":"city"
       },
       "geometry":{
@@ -162,8 +186,11 @@
       "properties":{
         "id": 9,
         "title":"Tulum",
-        "imageThumb":"https://c1.staticflickr.com/5/4390/36837410552_fbeb6d1cdc_q.jpg",
-        "imageUrl":"https://c1.staticflickr.com/5/4390/36837410552_fbeb6d1cdc.jpg",
+        "images": {          
+          "thumb":"https://c1.staticflickr.com/5/4390/36837410552_fbeb6d1cdc_q.jpg",
+          "small":"https://c1.staticflickr.com/5/4390/36837410552_fbeb6d1cdc_n.jpg",
+          "medium":"https://c1.staticflickr.com/5/4390/36837410552_fbeb6d1cdc.jpg"
+        },
         "type":"beach"
       },
       "geometry":{
