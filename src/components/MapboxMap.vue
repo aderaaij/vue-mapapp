@@ -8,11 +8,14 @@
         v-for="location in locations.features"
         :key="location.properties.id"
         :ref="'markers'"
+        @mouseenter="setActive(location)"
         @click="setCenter(location.geometry.coordinates)">
         <map-marker 
           :class="showMarkers ? 'marker--visible' : 'marker--hidden'"
           :iconType="location.properties.type"
           :id="location.properties.id"
+          :location="location"
+          @marker-offset="onMarkerOffset"
           />
       </div>
     </div>
@@ -22,6 +25,7 @@
 import mapboxgl from 'mapbox-gl';
 import { mapState, mapActions, mapGetters } from 'vuex';
 import MapMarker from './MapMarker';
+import { offSetMarker } from '@/helpers';
 export default {
   components: {
     MapMarker,
@@ -59,14 +63,14 @@ export default {
 
     this.registerEvents(map, bounds);
     this.addMarkers(map, bounds);
-    console.log('my state', this.myState);
   },
 
   methods: {
-    ...mapActions(['setCenter']),
+    ...mapActions(['setCenter', 'toggleLocationHover', 'setExcerptId']),
 
-    mapTest() {
-      console.log('my state', this.myState);
+    setActive(location) {
+      this.toggleLocationHover(location.geometry.coordinates);
+      this.setExcerptId(location.properties.id);
     },
 
     mapInit() {
@@ -74,7 +78,7 @@ export default {
         this.mapOptions.container = 'map';
       }
       const map = new mapboxgl.Map(this.mapOptions);
-
+      this.theMap = map;
       this.$emit('map-init', map);
       return map;
     },
@@ -101,6 +105,10 @@ export default {
       map.on('click', e => {
         this.$emit('map-click', map, e);
       });
+    },
+
+    onMarkerOffset(marker) {
+      // offSetMarker(marker, 3, this.theMap);
     },
 
     addMarkers(map, bounds) {
