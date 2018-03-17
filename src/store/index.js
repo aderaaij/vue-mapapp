@@ -40,10 +40,8 @@ const actions = {
 
   setLocations({ commit }) {
     return new Promise(resolve => {
-      setTimeout(() => {
-        commit(types.SET_LOCATIONS, geoData);
-        resolve();
-      }, 300);
+      commit(types.SET_LOCATIONS, geoData);
+      resolve();
     });
   },
 
