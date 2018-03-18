@@ -105,3 +105,16 @@ export const playback = () => {
     },
   };
 };
+
+export function titleSplit(title) {
+  const titleArr = title.split(' ');
+  const titleLast = titleArr.slice(
+    Math.ceil(titleArr.length / 2),
+    titleArr.length
+  );
+  const titleFirst = titleArr.slice(0, Math.ceil(titleArr.length / 2));
+  return {
+    first: titleFirst.join(' '),
+    last: titleLast.join(' '),
+  };
+}
