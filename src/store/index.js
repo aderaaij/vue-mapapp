@@ -17,6 +17,8 @@ const state = {
   center: [-82.98509939999997, 12.2937504],
   excerptId: null,
   locationHover: false,
+  isPanningToMarker: false,
+  tripBounds: null,
 };
 
 const getters = {
@@ -24,6 +26,8 @@ const getters = {
   mapLocations: state => state.locations,
   getCenter: state => state.center,
   getExcerptId: state => state.excerptId,
+  getPanningStatus: state => state.isPanningToMarker,
+  getTripBounds: state => state.tripBounds,
 };
 
 const actions = {
@@ -53,6 +57,10 @@ const actions = {
     commit(types.SET_CENTER);
   },
 
+  setTripBounds({ commit }, bounds) {
+    commit(types.SET_TRIP_BOUNDS, bounds);
+  },
+
   toggleMapLoaded({ state, commit }) {
     commit(types.TOGGLE_MAP_LOADED, state.mapLoaded);
   },
@@ -64,6 +72,10 @@ const actions = {
   toggleLocationHover({ state, commit }, { active, coordinates }) {
     commit(types.TOGGLE_LOCATION_HOVER, active);
     commit(types.SET_CENTER, coordinates);
+  },
+
+  togglePanToMarker({ state, commit }, value) {
+    commit(types.TOGGLE_PANTOMARKER, value);
   },
 
   setExcerptId({ state, commit }, id) {
@@ -87,11 +99,17 @@ const mutations = {
   [types.SET_CENTER](state, center) {
     state.center = center;
   },
+  [types.SET_TRIP_BOUNDS](state, bounds) {
+    state.tripBounds = bounds;
+  },
   [types.SET_EXCERPT_ID](state, excerptId) {
     state.excerptId = excerptId;
   },
   [types.TOGGLE_LOCATION_HOVER](state, locationHover) {
     state.locationHover = locationHover;
+  },
+  [types.TOGGLE_PANTOMARKER](state, value) {
+    state.isPanningToMarker = value;
   },
 };
 
