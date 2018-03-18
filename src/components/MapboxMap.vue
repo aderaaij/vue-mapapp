@@ -8,8 +8,8 @@
         v-for="location in locations.features"
         :key="location.properties.id"
         :ref="'markers'"
-        @mouseenter="setActive(location)"
-        @mouseleave="setHoveredLocationId(null)"
+        @mouseenter="onMouseEnter(location)"
+        @mouseleave="onMouseLeave"
         @click="setCenter(location.geometry.coordinates)">
         <map-marker 
           :class="showMarkers ? 'marker--visible' : 'marker--hidden'"
@@ -69,10 +69,18 @@ export default {
       'setTripBounds',
       'toggleLocationHover',
       'setHoveredLocationId',
+      'getActiveLocationId',
     ]),
 
-    setActive(location) {
+    onMouseEnter(location) {
       this.setHoveredLocationId(location.properties.id);
+    },
+
+    onMouseLeave() {
+      if (!this.getActiveLocationId) {
+        this.setHoveredLocationId(null);
+        this.toggleLocationHover(false);
+      }
     },
 
     mapInit() {
