@@ -6,8 +6,9 @@
 
 <style lang="scss">
 @import '~normalize.css/normalize.css';
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
