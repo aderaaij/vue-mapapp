@@ -1,7 +1,7 @@
 <template>
   <div
-    class='e-marker'
-    :class="[isActive ? 'e-marker--active' : '']">
+    :v-bind="getHoveredLocation(this.id)"
+    class='e-marker'>
     <svg
       class="e-marker__svg"
       version="1.1"
@@ -107,14 +107,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['getExcerptId']),
-
-    isActive() {
-      if (this.id === this.getExcerptId) {
-        return true;
-      }
-      return false;
-    },
+    ...mapGetters(['getHoveredLocation']),
 
     splitTitle() {
       return titleSplit(this.location.properties.title);
@@ -180,7 +173,7 @@ export default {
   },
 
   updated() {
-    if (this.isActive) {
+    if (this.getHoveredLocation(this.id)) {
       this.$emit('marker-offset', this.$el);
       this.markerPoser.set('open');
     } else {

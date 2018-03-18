@@ -1,8 +1,7 @@
 <template>
   <div class="home">
-    <div v-if="dataLoaded" >
-      <mapbox-map 
-        :mapStyle="mapStyle"
+    <div v-if="getDataLoaded" >
+      <mapbox-map
         :locations="locations"
         :map-options="{
           style: mapStyle,
@@ -33,17 +32,17 @@ export default {
   },
 
   computed: {
-    ...mapState([
-      'dataLoaded',
-      'mapLoaded',
-      'mapStyle',
-      'locations',
-      'locationHover',
+    ...mapState(['mapStyle', 'locations', 'locationHover']),
+    ...mapGetters([
+      'getCenter',
+      'getTripBounds',
+      'getZoom',
+      'getDataLoaded',
+      'getMapLoaded',
     ]),
-    ...mapGetters(['getCenter', 'getTripBounds']),
 
     initLoaded() {
-      if (this.dataLoaded && this.mapLoaded) {
+      if (this.getDataLoaded && this.getMapLoaded) {
         return true;
       }
       return false;
@@ -61,8 +60,8 @@ export default {
     ]),
 
     onMapLoaded(map) {
-      this.toggleMapLoaded();
       this.map = map;
+      this.toggleMapLoaded();
       this.fitBounds(map);
     },
 
@@ -88,7 +87,7 @@ export default {
       }
     },
   },
-  mounted() {
+  created() {
     Promise.all([this.setMapStyle(), this.setLocations()]).then(() => {
       this.toggleDataLoaded();
     });
@@ -97,8 +96,8 @@ export default {
     if (this.initLoaded && this.locationHover) {
       this.map.flyTo({
         center: this.getCenter,
-        speed: 0.5,
-        // zoom: 6,
+        speed: 0.7,
+        zoom: this.getZoom,
       });
       this.map.on('moveend', e => {
         this.toggleLocationHover(false);

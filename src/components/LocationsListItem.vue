@@ -1,8 +1,10 @@
 <template>
   <div 
     @mouseenter="setActive(location)"
+    @mouseleave="setInActive(location)"
+    @click="activateItem(location)"
     class="listItem"
-    :class="[isActive ? 'listItem--active' : '']">
+    :class="[getHoveredLocation(this.location.properties.id) ? 'listItem--active' : '']">
     <h3>{{ location.properties.title }}</h3>
     <img :src="images.medium">
   </div>
@@ -19,14 +21,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['getExcerptId']),
-
-    isActive() {
-      if (this.location.properties.id === this.getExcerptId) {
-        return true;
-      }
-      return false;
-    },
+    ...mapGetters(['getHoveredLocation']),
 
     images() {
       return this.location.properties.images;
@@ -34,13 +29,30 @@ export default {
   },
 
   methods: {
-    ...mapActions(['setCenter', 'toggleLocationHover', 'setExcerptId']),
+    ...mapActions(['setCenter', 'toggleLocationHover', 'setHoveredLocationId']),
     setActive(location) {
       this.toggleLocationHover({
         active: true,
         coordinates: location.geometry.coordinates,
+        zoom: 6,
       });
-      this.setExcerptId(location.properties.id);
+      this.setHoveredLocationId(location.properties.id);
+    },
+    setInActive(location) {
+      this.setHoveredLocationId(null);
+      this.toggleLocationHover({
+        active: false,
+        coordinates: [],
+      });
+    },
+    activateItem(location) {
+      console.log(this.location.geometry.coordinates);
+      this.setCenter(this.location.geometry.coordinates);
+      this.toggleLocationHover({
+        active: true,
+        coordinates: location.geometry.coordinates,
+        zoom: 11,
+      });
     },
   },
 };

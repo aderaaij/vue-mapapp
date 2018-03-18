@@ -9,6 +9,7 @@
         :key="location.properties.id"
         :ref="'markers'"
         @mouseenter="setActive(location)"
+        @mouseleave="setHoveredLocationId(null)"
         @click="setCenter(location.geometry.coordinates)">
         <map-marker 
           :class="showMarkers ? 'marker--visible' : 'marker--hidden'"
@@ -36,10 +37,6 @@ export default {
   },
 
   props: {
-    mapStyle: {
-      required: true,
-      type: Object,
-    },
     locations: {
       required: true,
       type: Object,
@@ -70,12 +67,12 @@ export default {
       'setCenter',
       'setTripBounds',
       'toggleLocationHover',
-      'setExcerptId',
+      'setHoveredLocationId',
     ]),
 
     setActive(location) {
       this.toggleLocationHover(location.geometry.coordinates);
-      this.setExcerptId(location.properties.id);
+      this.setHoveredLocationId(location.properties.id);
     },
 
     mapInit() {
@@ -93,7 +90,6 @@ export default {
       map.on('load', () => {
         this.$emit('map-load', map);
         this.showMarkers = true;
-        // this.fitBounds(map, bounds);
       });
 
       //Map Mouse Move
@@ -126,12 +122,6 @@ export default {
       });
       this.setTripBounds(bounds);
     },
-
-    // fitBounds(map, bounds) {
-    //   map.fitBounds(bounds, {
-    //     padding: { top: 50, bottom: 50, left: 50, right: 50 },
-    //   });
-    // },
   },
 };
 </script>
