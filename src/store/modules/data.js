@@ -3,26 +3,10 @@ import geoData from '@/data/api';
 // import contentful from 'contentful';
 import axios from 'axios';
 
-const info = {
-  space: 'bvocjxecix04',
-  token: 'dcf9690d920d2faa196153fc111fd188ecf1d6a4890a2970d6c6924843ced4c2',
-  url: 'http://cdn.contentful.com/spaces/',
-};
-const api =
-  'https://s3-us-west-2.amazonaws.com/s.cdpn.io/22914/map_dark-matter.json';
-const contentfulApi = `${info.url}${info.space}/entries?access_token=${
-  info.token
-}`;
 const state = {
   mapStyle: null,
   locations: null,
 };
-
-// const client = contentful.createClient({
-//   space: 'bvocjxecix04',
-//   accessToken:
-//     'dcf9690d920d2faa196153fc111fd188ecf1d6a4890a2970d6c6924843ced4c2',
-// });
 
 const getters = {
   getMapStyle: state => state.mapStyle,
@@ -41,18 +25,11 @@ const actions = {
     });
   },
 
-  // setLocations({ commit }) {
-  //   return new Promise(resolve => {
-  //     commit(types.SET_LOCATIONS, geoData);
-  //     resolve();
-  //   });
-  // },
   setLocations({ commit }) {
     return new Promise(resolve => {
       axios
         .get(contentfulApi)
         .then(response => {
-          console.log(response.data.items);
           commit(types.SET_LOCATIONS, response.data.items);
           resolve();
         })
