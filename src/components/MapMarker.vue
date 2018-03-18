@@ -1,6 +1,6 @@
 <template>
   <div
-    :v-bind="getHoveredLocationId"
+    :v-bind="getHoveredLocation(id)"
     class='e-marker'>
     <svg
       class="e-marker__svg"
@@ -107,7 +107,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['getHoveredLocation', 'getHoveredLocationId']),
+    ...mapGetters(['getHoveredLocation']),
 
     splitTitle() {
       return titleSplit(this.location.fields.title);
@@ -158,10 +158,10 @@ export default {
         childProps.icon
       );
 
-      const imagePose = markerPose.addChild(
-        this.$el.querySelector('.e-marker__image'),
-        childProps.image
-      );
+      // const imagePose = markerPose.addChild(
+      //   this.$el.querySelector('.e-marker__image'),
+      //   childProps.image
+      // );
 
       const textPose = markerPose.addChild(
         this.$el.querySelector('.e-marker__text'),
@@ -173,7 +173,7 @@ export default {
   },
 
   updated() {
-    if (this.getHoveredLocationId === this.id) {
+    if (this.getHoveredLocation(this.id)) {
       this.$emit('marker-offset', this.$el);
       this.markerPoser.set('open');
     } else {
@@ -190,25 +190,10 @@ export default {
   }
 
   &__svg {
+    display: block;
     fill: #fff;
     color: #fff;
     cursor: pointer;
-  }
-
-  &--active {
-    // z-index: 999;
-  }
-
-  svg {
-    display: block;
-  }
-
-  &__marker {
-    fill: #fff;
-  }
-
-  &__icon {
-    fill: #fff;
   }
 
   &__circle {

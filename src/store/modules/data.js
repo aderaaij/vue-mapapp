@@ -3,11 +3,16 @@ import geoData from '@/data/api';
 // import contentful from 'contentful';
 import axios from 'axios';
 
+const info = {
+  space: 'bvocjxecix04',
+  token: 'dcf9690d920d2faa196153fc111fd188ecf1d6a4890a2970d6c6924843ced4c2',
+  url: 'http://cdn.contentful.com/spaces/',
+};
 const api =
   'https://s3-us-west-2.amazonaws.com/s.cdpn.io/22914/map_dark-matter.json';
-
-const contentfulApi =
-  'http://cdn.contentful.com/spaces/bvocjxecix04/entries?access_token=dcf9690d920d2faa196153fc111fd188ecf1d6a4890a2970d6c6924843ced4c2';
+const contentfulApi = `${info.url}${info.space}/entries?access_token=${
+  info.token
+}`;
 const state = {
   mapStyle: null,
   locations: null,
