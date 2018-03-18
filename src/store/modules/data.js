@@ -8,6 +8,11 @@ const state = {
   locations: null,
 };
 
+const api =
+  'https://s3-us-west-2.amazonaws.com/s.cdpn.io/22914/map_dark-matter.json';
+const contentfulApi = `${info.url}${info.space}/entries?access_token=${
+  info.token
+}`;
 const getters = {
   getMapStyle: state => state.mapStyle,
   getLocations: state => state.locations,
