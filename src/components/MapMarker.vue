@@ -196,7 +196,7 @@ export default {
   }
 
   &--active {
-    fill: #ec008c;
+    // z-index: 999;
   }
 
   svg {

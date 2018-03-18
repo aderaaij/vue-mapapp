@@ -14,7 +14,7 @@ const getters = {
 };
 
 const actions = {
-  setMapStyle({ state, commit }) {
+  setMapStyle({ commit }) {
     return new Promise(resolve => {
       fetch(api)
         .then(response => response.json())

@@ -1,7 +1,7 @@
 <template>
   <div class="locationsList">
     <header class='locationsList__header'>
-      <h2>Central-America trip 2016/2017</h2>
+      <h2 @click="onClick">Central-America trip 2016/2017</h2>
     </header>
     <ul>
       <li 
@@ -25,6 +25,11 @@ export default {
     locations: {
       required: true,
       type: Array,
+    },
+  },
+  methods: {
+    onClick() {
+      console.log('click');
     },
   },
 };

@@ -51,6 +51,7 @@ export default {
     ...mapState(['zoom', 'center', 'mapLoaded']),
     ...mapGetters({
       myState: 'getCenter',
+      getHoveredLocation: 'getHoveredLocation',
     }),
   },
 
@@ -71,7 +72,6 @@ export default {
     ]),
 
     setActive(location) {
-      this.toggleLocationHover(location.geometry.coordinates);
       this.setHoveredLocationId(location.properties.id);
     },
 
@@ -134,6 +134,10 @@ export default {
 
 .marker {
   display: block;
+
+  &:hover {
+    z-index: 101;
+  }
 
   &--visible {
     display: block;

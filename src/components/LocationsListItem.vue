@@ -1,8 +1,8 @@
 <template>
   <div 
-    @mouseenter="setActive(location)"
-    @mouseleave="setInActive(location)"
-    @click="activateItem(location)"
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave"
+    @click="onClick"
     class="listItem"
     :class="[getHoveredLocation(this.location.properties.id) ? 'listItem--active' : '']">
     <h3>{{ location.properties.title }}</h3>
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
 export default {
   props: {
     location: {
@@ -21,7 +21,8 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['getHoveredLocation']),
+    ...mapState(['activeLocationId']),
+    ...mapGetters(['getHoveredLocation', 'getActiveLocationId']),
 
     images() {
       return this.location.properties.images;
@@ -29,30 +30,39 @@ export default {
   },
 
   methods: {
-    ...mapActions(['setCenter', 'toggleLocationHover', 'setHoveredLocationId']),
-    setActive(location) {
-      this.toggleLocationHover({
-        active: true,
-        coordinates: location.geometry.coordinates,
-        zoom: 6,
-      });
-      this.setHoveredLocationId(location.properties.id);
+    ...mapActions([
+      'setCenter',
+      'setZoom',
+      'toggleLocationHover',
+      'setHoveredLocationId',
+      'togglePanToMarker',
+      'setActiveLocationId',
+    ]),
+
+    onMouseEnter() {
+      if (!this.getActiveLocationId) {
+        this.toggleLocationHover(true);
+        this.setHoveredLocationId(this.location.properties.id);
+        this.setCenter(this.location.geometry.coordinates);
+        this.setZoom(5);
+      }
     },
-    setInActive(location) {
-      this.setHoveredLocationId(null);
-      this.toggleLocationHover({
-        active: false,
-        coordinates: [],
-      });
+
+    onMouseLeave() {
+      if (!this.getActiveLocationId) {
+        this.setHoveredLocationId(null);
+        this.toggleLocationHover(false);
+      }
     },
-    activateItem(location) {
-      console.log(this.location.geometry.coordinates);
-      this.setCenter(this.location.geometry.coordinates);
-      this.toggleLocationHover({
-        active: true,
-        coordinates: location.geometry.coordinates,
-        zoom: 11,
-      });
+
+    onClick() {
+      if (!this.getActiveLocationId) {
+        this.setActiveLocationId(this.location.properties.id);
+        this.setCenter(this.location.geometry.coordinates);
+        this.setZoom(11);
+        this.toggleLocationHover(true);
+        this.togglePanToMarker(true);
+      }
     },
   },
 };
@@ -79,7 +89,4 @@ export default {
     margin: 0 0 1em;
   }
 }
-</style>
-
-
 </style>

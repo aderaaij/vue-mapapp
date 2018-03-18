@@ -2,16 +2,17 @@
   <div class="home">
     <div v-if="getDataLoaded" >
       <mapbox-map
-        :locations="locations"
+        :locations="getLocations"
         :map-options="{
-          style: mapStyle,
+          style: getMapStyle,
           center: getCenter,
-          zoom: 3
+          zoom: getZoom
         }"
         @map-load="onMapLoaded"
         @map-click="onMapClicked"
+        @map-moveend="onMoveEnd"
       />
-      <locations-list :locations="locations.features"/>    
+      <locations-list :locations="getLocations.features"/>    
     </div>
     <p v-else>loading</p>
   </div>
@@ -32,13 +33,16 @@ export default {
   },
 
   computed: {
-    ...mapState(['mapStyle', 'locations', 'locationHover']),
+    ...mapState(['locationHover', 'isPanningToMarker']),
     ...mapGetters([
       'getCenter',
       'getTripBounds',
       'getZoom',
       'getDataLoaded',
       'getMapLoaded',
+      'getLocations',
+      'getMapStyle',
+      'getActiveLocationId',
     ]),
 
     initLoaded() {
@@ -65,15 +69,15 @@ export default {
       this.fitBounds(map);
     },
 
+    onMoveEnd(map, e) {
+      if (this.isPanningToMarker) {
+        this.togglePanToMarker(false);
+      }
+    },
+
     fitBounds(map) {
       map.fitBounds(this.getTripBounds, {
         padding: { top: 50, bottom: 50, left: 50, right: 50 },
-      });
-    },
-
-    flyTo() {
-      this.map.flyTo({
-        center: this.getCenter,
       });
     },
 
@@ -102,6 +106,9 @@ export default {
       this.map.on('moveend', e => {
         this.toggleLocationHover(false);
       });
+    }
+    if (this.isPanningToMarker) {
+      console.log('panning');
     }
   },
 };
