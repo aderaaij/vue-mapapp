@@ -5,16 +5,16 @@
       :id="(mapOptions.hasOwnProperty('container') ? mapOptions.container : 'map')"
       :ref="'mapdiv'">
       <div        
-        v-for="location in locations.features"
-        :key="location.properties.id"
+        v-for="location in locations"
+        :key="location.sys.id"
         :ref="'markers'"
         @mouseenter="onMouseEnter(location)"
         @mouseleave="onMouseLeave"
-        @click="setCenter(location.geometry.coordinates)">
+        @click="setCenter([location.fields.coordinates.lon, location.fields.coordinates.lat])">
         <map-marker 
           :class="showMarkers ? 'marker--visible' : 'marker--hidden'"
-          :iconType="location.properties.type"
-          :id="location.properties.id"
+          :iconType="location.fields.locationType"
+          :id="location.sys.id"
           :location="location"
           @marker-offset="onMarkerOffset"
           />
@@ -39,7 +39,7 @@ export default {
   props: {
     locations: {
       required: true,
-      type: Object,
+      type: Array,
     },
     mapOptions: {
       type: Object,
@@ -73,7 +73,7 @@ export default {
     ]),
 
     onMouseEnter(location) {
-      this.setHoveredLocationId(location.properties.id);
+      this.setHoveredLocationId(location.sys.id);
     },
 
     onMouseLeave() {
@@ -121,12 +121,18 @@ export default {
     },
 
     addMarkers(map, bounds) {
-      this.locations.features.forEach((item, i) => {
+      this.locations.forEach((location, i) => {
         const markerRef = this.$refs.markers[i];
         new mapboxgl.Marker(markerRef, { offset: [0, -30] })
-          .setLngLat(item.geometry.coordinates)
+          .setLngLat([
+            location.fields.coordinates.lon,
+            location.fields.coordinates.lat,
+          ])
           .addTo(map);
-        bounds.extend(item.geometry.coordinates);
+        bounds.extend([
+          location.fields.coordinates.lon,
+          location.fields.coordinates.lat,
+        ]);
       });
       this.setTripBounds(bounds);
     },

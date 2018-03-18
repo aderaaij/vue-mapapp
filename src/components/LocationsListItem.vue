@@ -4,9 +4,9 @@
     @mouseleave="onMouseLeave"
     @click="onClick"
     class="listItem"
-    :class="[getHoveredLocation(this.location.properties.id) ? 'listItem--active' : '']">
-    <h3>{{ location.properties.title }}</h3>
-    <img :src="images.medium">
+    :class="[getHoveredLocation(sys.id) ? 'listItem--active' : '']">
+    <h3>{{ fields.title }}</h3>
+    <!-- <img :src="images.medium"> -->
   </div>
 </template>
 
@@ -23,6 +23,21 @@ export default {
   computed: {
     ...mapState(['activeLocationId']),
     ...mapGetters(['getHoveredLocation', 'getActiveLocationId']),
+
+    fields() {
+      return this.location.fields;
+    },
+
+    sys() {
+      return this.location.sys;
+    },
+
+    coordinates() {
+      return [
+        this.location.fields.coordinates.lon,
+        this.location.fields.coordinates.lat,
+      ];
+    },
 
     images() {
       return this.location.properties.images;
@@ -42,8 +57,11 @@ export default {
     onMouseEnter() {
       if (!this.getActiveLocationId) {
         this.toggleLocationHover(true);
-        this.setHoveredLocationId(this.location.properties.id);
-        this.setCenter(this.location.geometry.coordinates);
+        this.setHoveredLocationId(this.location.sys.id);
+        this.setCenter([
+          this.fields.coordinates.lon,
+          this.fields.coordinates.lat,
+        ]);
         this.setZoom(5);
       }
     },
@@ -57,8 +75,11 @@ export default {
 
     onClick() {
       if (!this.getActiveLocationId) {
-        this.setActiveLocationId(this.location.properties.id);
-        this.setCenter(this.location.geometry.coordinates);
+        this.setActiveLocationId(this.location.sys.id);
+        this.setCenter([
+          this.location.fields.coordinates.lon,
+          this.location.fields.coordinates.lat,
+        ]);
         this.setZoom(11);
         this.toggleLocationHover(true);
         this.togglePanToMarker(true);

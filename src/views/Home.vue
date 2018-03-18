@@ -12,7 +12,7 @@
         @map-click="onMapClicked"
         @map-moveend="onMoveEnd"
       />
-      <locations-list :locations="getLocations.features"/>    
+      <locations-list :locations="getLocations"/>    
     </div>
     <p v-else>loading</p>
   </div>

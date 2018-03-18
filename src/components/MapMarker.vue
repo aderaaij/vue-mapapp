@@ -1,6 +1,6 @@
 <template>
   <div
-    :v-bind="getHoveredLocation(this.id)"
+    :v-bind="getHoveredLocationId"
     class='e-marker'>
     <svg
       class="e-marker__svg"
@@ -59,13 +59,13 @@
       M33.2,71.4c-0.5,0.3-1.1,0.4-1.6,0.6c-0.8,0.2-1.5,0.3-2.3,0.3c1.6-0.7,3.2-1.3,4.8-1.9h-0.1c0.1-0.1,0.3,0,0.4,0.1
       C34.2,71,33.7,71.2,33.2,71.4z"/>
       </g>
-      <image
+      <!-- <image
         opacity="0"
         class="e-marker__image"
         width="100%"
         height="100%"
         clip-path="url(#circle)"
-        :xlink:href="images.thumb" />
+        :xlink:href="images.thumb" /> -->
       <text
         opacity="0"
         class="e-marker__text"
@@ -98,7 +98,7 @@ export default {
     },
     id: {
       required: true,
-      type: Number,
+      type: String,
     },
     location: {
       required: true,
@@ -107,10 +107,10 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['getHoveredLocation']),
+    ...mapGetters(['getHoveredLocation', 'getHoveredLocationId']),
 
     splitTitle() {
-      return titleSplit(this.location.properties.title);
+      return titleSplit(this.location.fields.title);
     },
 
     images() {
@@ -173,7 +173,7 @@ export default {
   },
 
   updated() {
-    if (this.getHoveredLocation(this.id)) {
+    if (this.getHoveredLocationId === this.id) {
       this.$emit('marker-offset', this.$el);
       this.markerPoser.set('open');
     } else {

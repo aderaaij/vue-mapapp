@@ -27,10 +27,13 @@ const getters = {
   getMapLoaded: state => state.mapLoaded,
   getCenter: state => state.center,
   getZoom: state => state.zoom,
-  getHoveredLocation: state => id =>
-    state.hoveredLocationId === id ? true : false,
+  getHoveredLocation: state => id => {
+    if (!id) return false;
+    return state.hoveredLocationId === id ? true : false;
+  },
   getPanningStatus: state => state.isPanningToMarker,
   getTripBounds: state => state.tripBounds,
+  getHoveredLocationId: state => state.hoveredLocationId,
   getActiveLocationId: state => state.activeLocationId,
 };
 

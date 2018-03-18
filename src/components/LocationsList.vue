@@ -6,9 +6,8 @@
     <ul>
       <li 
         v-for="location in locations" 
-        :key="location.properties.id"
-        >
-       <locations-list-item :location="location" />
+        :key="location.sys.id">
+        <locations-list-item :location="location" />
       </li>
     </ul>
   </div>
