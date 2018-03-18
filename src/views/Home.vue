@@ -40,7 +40,14 @@ export default {
       'locations',
       'locationHover',
     ]),
-    ...mapGetters(['getCenter']),
+    ...mapGetters(['getCenter', 'getTripBounds']),
+
+    initLoaded() {
+      if (this.dataLoaded && this.mapLoaded) {
+        return true;
+      }
+      return false;
+    },
   },
 
   methods: {
@@ -50,11 +57,19 @@ export default {
       'toggleDataLoaded',
       'toggleMapLoaded',
       'toggleLocationHover',
+      'togglePanToMarker',
     ]),
 
     onMapLoaded(map) {
       this.toggleMapLoaded();
       this.map = map;
+      this.fitBounds(map);
+    },
+
+    fitBounds(map) {
+      map.fitBounds(this.getTripBounds, {
+        padding: { top: 50, bottom: 50, left: 50, right: 50 },
+      });
     },
 
     flyTo() {
@@ -65,6 +80,7 @@ export default {
 
     onMapClicked(map, e) {
       if (e.originalEvent.target.tagName !== 'CANVAS') {
+        this.togglePanToMarker(true);
         map.flyTo({
           center: this.getCenter,
           zoom: 11,
@@ -78,7 +94,7 @@ export default {
     });
   },
   updated() {
-    if (this.dataLoaded && this.mapLoaded && this.locationHover) {
+    if (this.initLoaded && this.locationHover) {
       this.map.flyTo({
         center: this.getCenter,
         speed: 0.5,
