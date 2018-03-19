@@ -5,7 +5,7 @@
     </header>
     <ul>
       <li 
-        v-for="location in locations" 
+        v-for="location in getLocationsSorted" 
         :key="location.sys.id">
         <locations-list-item :location="location" />
       </li>
@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import LocationsListItem from './LocationsListItem';
 export default {
   components: {
@@ -25,6 +26,20 @@ export default {
       required: true,
       type: Array,
     },
+  },
+
+  computed: {
+    ...mapGetters(['getLocationsSorted']),
+    // locationsSorted() {
+    //   // console.log(this.locations.fiel);
+    //   return this.locations.sort((a, b) => {
+    //     return new Date(a.fields.arrivalDate) - new Date(b.fields.arrivalDate);
+    //     //   // Turn your strings into dates, and then subtract them
+    //     //   // to get a value that is either negative, positive, or zero.
+    //     // return new Date(b.fields.arrivalDate) - new Date(b.fields.arrivalDate);
+    //     //   console.log(a);
+    //   });
+    // },
   },
   methods: {
     onClick() {

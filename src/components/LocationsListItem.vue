@@ -6,7 +6,7 @@
     class="listItem"
     :class="[getHoveredLocation(sys.id) ? 'listItem--active' : '']">
     <h3>{{ fields.title }}</h3>
-    <!-- <img :src="images.medium"> -->
+    <img :src="`${this.getImageUrl}?fit=thumb&w=500&h=300`">
   </div>
 </template>
 
@@ -22,7 +22,7 @@ export default {
 
   computed: {
     ...mapState(['activeLocationId']),
-    ...mapGetters(['getHoveredLocation', 'getActiveLocationId']),
+    ...mapGetters(['getHoveredLocation', 'getActiveLocationId', 'getImage']),
 
     fields() {
       return this.location.fields;
@@ -37,6 +37,10 @@ export default {
         this.location.fields.coordinates.lon,
         this.location.fields.coordinates.lat,
       ];
+    },
+
+    getImageUrl() {
+      return this.getImage(this.location.fields.featuredImage.sys.id);
     },
 
     images() {

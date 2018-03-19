@@ -5,7 +5,7 @@
       :id="(mapOptions.hasOwnProperty('container') ? mapOptions.container : 'map')"
       :ref="'mapdiv'">
       <div        
-        v-for="location in locations"
+        v-for="location in getLocationsSorted"
         :key="location.sys.id"
         :ref="'markers'"
         @mouseenter="onMouseEnter(location)"
@@ -52,6 +52,7 @@ export default {
     ...mapGetters({
       myState: 'getCenter',
       getHoveredLocation: 'getHoveredLocation',
+      getLocationsSorted: 'getLocationsSorted',
     }),
   },
 
@@ -77,10 +78,8 @@ export default {
     },
 
     onMouseLeave() {
-      if (!this.getActiveLocationId) {
-        this.setHoveredLocationId(null);
-        this.toggleLocationHover(false);
-      }
+      this.setHoveredLocationId(null);
+      this.toggleLocationHover(false);
     },
 
     mapInit() {

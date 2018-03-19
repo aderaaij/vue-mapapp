@@ -28,7 +28,7 @@
         class="e-marker__circle"
         d="M36,97.4c15,0,27.3-12.2,27.3-27.3c0-15-12.2-27.3-27.3-27.3S8.7,55.1,8.7,70.2S21,97.4,36,97.4z"/>
       <path
-        v-if="iconType === 'city'"
+        v-if="iconType === 'city' || iconType === 'village'"
         class="e-marker__icon e-marker__icon--city"
         d="M41.1,68.7V58.5L36,53.4l-5.1,5.1v3.4H20.8v23.7h30.5V68.7H41.1z M27.5,82.2h-3.4v-3.4h3.4V82.2z M27.5,75.4h-3.4
     V72h3.4V75.4z M27.5,68.7h-3.4v-3.4h3.4V68.7z M37.7,82.2h-3.4v-3.4h3.4V82.2z M37.7,75.4h-3.4V72h3.4V75.4z M37.7,68.7h-3.4v-3.4
@@ -59,13 +59,13 @@
       M33.2,71.4c-0.5,0.3-1.1,0.4-1.6,0.6c-0.8,0.2-1.5,0.3-2.3,0.3c1.6-0.7,3.2-1.3,4.8-1.9h-0.1c0.1-0.1,0.3,0,0.4,0.1
       C34.2,71,33.7,71.2,33.2,71.4z"/>
       </g>
-      <!-- <image
+      <image
         opacity="0"
         class="e-marker__image"
         width="100%"
         height="100%"
         clip-path="url(#circle)"
-        :xlink:href="images.thumb" /> -->
+        :xlink:href="`${this.image}?fit=thumb&f=top_left&h=150&w=150&r=150`" />
       <text
         opacity="0"
         class="e-marker__text"
@@ -107,7 +107,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['getHoveredLocation']),
+    ...mapGetters(['getHoveredLocation', 'getImage']),
 
     splitTitle() {
       return titleSplit(this.location.fields.title);
@@ -115,6 +115,14 @@ export default {
 
     images() {
       return this.location.properties.images;
+    },
+
+    image() {
+      return this.getImage(this.location.fields.featuredImage.sys.id);
+    },
+
+    parentItem() {
+      return this.$el.parentNode;
     },
 
     markerPoser() {
@@ -158,10 +166,10 @@ export default {
         childProps.icon
       );
 
-      // const imagePose = markerPose.addChild(
-      //   this.$el.querySelector('.e-marker__image'),
-      //   childProps.image
-      // );
+      const imagePose = markerPose.addChild(
+        this.$el.querySelector('.e-marker__image'),
+        childProps.image
+      );
 
       const textPose = markerPose.addChild(
         this.$el.querySelector('.e-marker__text'),
@@ -176,8 +184,10 @@ export default {
     if (this.getHoveredLocation(this.id)) {
       this.$emit('marker-offset', this.$el);
       this.markerPoser.set('open');
+      this.parentItem.style.zIndex = 999;
     } else {
       this.markerPoser.set('closed');
+      this.parentItem.style.zIndex = '';
     }
   },
 };
