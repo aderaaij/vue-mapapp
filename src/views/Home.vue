@@ -12,7 +12,9 @@
         @map-click="onMapClicked"
         @map-moveend="onMoveEnd"
       />
-      <locations-list :locations="getLocations"/>    
+      <locations-list :locations="getLocations"/>
+      <!-- <location-article/>   -->
+      <Article v-if="getIfActiveArticle"/>
     </div>
     <p v-else>loading</p>
   </div>
@@ -22,6 +24,7 @@
 import { mapState, mapActions, mapGetters } from 'vuex';
 
 import MapboxMap from '@/components/MapboxMap';
+import Article from '@/components/Article';
 import LocationsList from '@/components/LocationsList';
 
 export default {
@@ -30,10 +33,11 @@ export default {
   components: {
     MapboxMap,
     LocationsList,
+    Article,
   },
 
   computed: {
-    ...mapState(['locationHover', 'isPanningToMarker']),
+    ...mapState(['locationHover', 'isPanningToMarker', 'isActiveArticle']),
     ...mapGetters([
       'getCenter',
       'getTripBounds',
@@ -42,7 +46,7 @@ export default {
       'getMapLoaded',
       'getLocations',
       'getMapStyle',
-      'getActiveLocationId',
+      'getIfActiveArticle',
     ]),
 
     initLoaded() {
@@ -61,6 +65,8 @@ export default {
       'toggleMapLoaded',
       'toggleLocationHover',
       'togglePanToMarker',
+      'setActiveArticleId',
+      'toggleActiveArticle',
     ]),
 
     onMapLoaded(map) {
@@ -91,11 +97,13 @@ export default {
       }
     },
   },
+
   created() {
     Promise.all([this.setMapStyle(), this.setLocations()]).then(() => {
       this.toggleDataLoaded();
     });
   },
+
   updated() {
     if (this.initLoaded && this.locationHover) {
       this.map.flyTo({
@@ -103,12 +111,20 @@ export default {
         speed: 0.7,
         zoom: this.getZoom,
       });
+      this.map.scrollZoom.disable();
+      this.map.boxZoom.disable();
+      this.map.dragPan.disable();
+      this.map.dragRotate.disable();
+      this.map.doubleClickZoom.disable();
       this.map.on('moveend', e => {
         this.toggleLocationHover(false);
       });
     }
     if (this.isPanningToMarker) {
-      console.log('panning');
+      this.map.on('moveend', () => {
+        this.setActiveArticleId(this.getActiveLocationId);
+        this.toggleActiveArticle();
+      });
     }
   },
 };
