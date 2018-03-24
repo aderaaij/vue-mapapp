@@ -10,7 +10,7 @@
         :ref="'markers'"
         @mouseenter="onMouseEnter(location)"
         @mouseleave="onMouseLeave"
-        @click="setCenter([location.fields.coordinates.lon, location.fields.coordinates.lat])">
+        @click="setMapCenter([location.fields.coordinates.lon, location.fields.coordinates.lat])">
         <map-marker 
           :class="showMarkers ? 'marker--visible' : 'marker--hidden'"
           :iconType="location.fields.locationType"
@@ -29,7 +29,7 @@ import MapMarker from './MapMarker';
 import { offSetMarker } from '@/helpers';
 export default {
   components: {
-    MapMarker,
+    MapMarker
   },
 
   data() {
@@ -39,12 +39,12 @@ export default {
   props: {
     locations: {
       required: true,
-      type: Array,
+      type: Array
     },
     mapOptions: {
       type: Object,
-      required: true,
-    },
+      required: true
+    }
   },
 
   computed: {
@@ -52,8 +52,8 @@ export default {
     ...mapGetters({
       myState: 'getCenter',
       getHoveredLocation: 'getHoveredLocation',
-      getLocationsSorted: 'getLocationsSorted',
-    }),
+      getLocationsSorted: 'getLocationsSorted'
+    })
   },
 
   mounted() {
@@ -66,11 +66,11 @@ export default {
 
   methods: {
     ...mapActions([
-      'setCenter',
+      'setMapCenter',
       'setTripBounds',
       'toggleLocationHover',
       'setHoveredLocationId',
-      'getActiveLocationId',
+      'getActiveLocationId'
     ]),
 
     onMouseEnter(location) {
@@ -125,23 +125,23 @@ export default {
         new mapboxgl.Marker(markerRef, { offset: [0, -30] })
           .setLngLat([
             location.fields.coordinates.lon,
-            location.fields.coordinates.lat,
+            location.fields.coordinates.lat
           ])
           .addTo(map);
         bounds.extend([
           location.fields.coordinates.lon,
-          location.fields.coordinates.lat,
+          location.fields.coordinates.lat
         ]);
       });
       this.setTripBounds(bounds);
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss">
 @import '~mapbox-gl/dist/mapbox-gl.css';
 .mapWrapper {
-  width: 70vw;
+  width: 100vw;
   height: 100vh;
 }
 
