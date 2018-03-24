@@ -1,5 +1,6 @@
 <template>
-  <div
+  <transition  v-on:before-enter="beforeEnter">
+  <div   
     :v-bind="getHoveredLocation(id)"
     class='e-marker'>
     <svg
@@ -83,6 +84,7 @@
       </text>
     </svg>
   </div>
+  </transition>
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex';
@@ -180,6 +182,12 @@ export default {
     },
   },
 
+  methods: {
+    beforeEnter() {
+      console.log(this);
+    },
+  },
+
   updated() {
     if (this.getHoveredLocation(this.id)) {
       this.$emit('marker-offset', this.$el);
@@ -211,7 +219,7 @@ export default {
   }
 
   &__text {
-    font-size: 12px;
+    font-size: 11px;
     font-family: 'Source Sans Pro', sans-serif;
     font-weight: 700;
     text-align: center;
