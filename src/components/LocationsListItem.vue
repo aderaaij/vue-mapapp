@@ -4,20 +4,24 @@
     @mouseleave="onMouseLeave"
     @click="onClick"
     class="listItem"
-    :class="[getHoveredLocation(sys.id) ? 'listItem--active' : '']">
-    <h3>{{ fields.title }}</h3>
+    :class="[getHoveredLocation(id) ? 'listItem--active' : '']">
+    <header class="listItem__header">
+      <h3>{{ fields.title }}</h3>
+      <span>{{ arrivalDate }}</span>
+    </header>
     <img :src="`${this.getImageUrl}?fit=thumb&w=500&h=300`">
   </div>
 </template>
 
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex';
+import { format, compareAsc } from 'date-fns';
 export default {
   props: {
     location: {
       required: true,
-      type: Object,
-    },
+      type: Object
+    }
   },
 
   computed: {
@@ -28,14 +32,14 @@ export default {
       return this.location.fields;
     },
 
-    sys() {
-      return this.location.sys;
+    id() {
+      return this.location.sys.id;
     },
 
     coordinates() {
       return [
         this.location.fields.coordinates.lon,
-        this.location.fields.coordinates.lat,
+        this.location.fields.coordinates.lat
       ];
     },
 
@@ -46,26 +50,27 @@ export default {
     images() {
       return this.location.properties.images;
     },
+
+    arrivalDate() {
+      return format(new Date(this.location.fields.arrivalDate), 'DD/MM/YYYY');
+    }
   },
 
   methods: {
     ...mapActions([
-      'setCenter',
+      'setMapCenter',
       'setZoom',
       'toggleLocationHover',
       'setHoveredLocationId',
       'togglePanToMarker',
-      'setActiveLocationId',
+      'setActiveLocationId'
     ]),
 
     onMouseEnter() {
       if (!this.getActiveLocationId) {
         this.toggleLocationHover(true);
-        this.setHoveredLocationId(this.location.sys.id);
-        this.setCenter([
-          this.fields.coordinates.lon,
-          this.fields.coordinates.lat,
-        ]);
+        this.setHoveredLocationId(this.id);
+        this.setMapCenter(this.coordinates);
         this.setZoom(5);
       }
     },
@@ -79,39 +84,51 @@ export default {
 
     onClick() {
       if (!this.getActiveLocationId) {
-        this.setActiveLocationId(this.location.sys.id);
-        this.setCenter([
-          this.location.fields.coordinates.lon,
-          this.location.fields.coordinates.lat,
-        ]);
+        this.setActiveLocationId(this.id);
+        this.setMapCenter(this.coordinates);
         this.setZoom(11);
         this.toggleLocationHover(true);
         this.togglePanToMarker(true);
       }
-    },
-  },
+    }
+  }
 };
 </script>
+<style>
+.is-selected {
+  background: blue;
+}
+</style>
 
 <style lang="scss" scoped>
 .listItem {
   & {
     transition: background 0.3s ease;
-    padding: 2em;
+    padding: 1em;
+    height: 150px;
   }
 
+  &.is-selected,
   &--active {
     background: #ccc;
   }
 
   img {
     display: block;
-    width: 100%;
+    width: 200px;
     height: auto;
   }
 
+  &__header {
+    // display: flex;
+  }
+
   h3 {
-    margin: 0 0 1em;
+    margin: 0 0;
+    font-size: 16px;
+  }
+  span {
+    font-size: 12px;
   }
 }
 </style>
