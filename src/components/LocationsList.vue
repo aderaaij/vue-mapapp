@@ -3,61 +3,64 @@
     <header class='locationsList__header'>
       <h2 @click="onClick">Central-America trip 2016/2017</h2>
     </header>
-    <ul>
-      <li 
+    <div ref="slider">
+      <div
         v-for="location in getLocationsSorted" 
         :key="location.sys.id">
         <locations-list-item :location="location" />
-      </li>
-    </ul>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import LocationsListItem from './LocationsListItem';
+import Flickity from 'flickity';
+
 export default {
   components: {
-    LocationsListItem,
+    LocationsListItem
   },
 
   props: {
     locations: {
       required: true,
-      type: Array,
-    },
+      type: Array
+    }
   },
 
   computed: {
-    ...mapGetters(['getLocationsSorted']),
-    // locationsSorted() {
-    //   // console.log(this.locations.fiel);
-    //   return this.locations.sort((a, b) => {
-    //     return new Date(a.fields.arrivalDate) - new Date(b.fields.arrivalDate);
-    //     //   // Turn your strings into dates, and then subtract them
-    //     //   // to get a value that is either negative, positive, or zero.
-    //     // return new Date(b.fields.arrivalDate) - new Date(b.fields.arrivalDate);
-    //     //   console.log(a);
-    //   });
-    // },
+    ...mapGetters(['getLocationsSorted'])
   },
   methods: {
     onClick() {
       console.log('click');
     },
+    startSlider() {
+      const flkty = new Flickity(this.$refs.slider, {
+        // options
+        cellAlign: 'left',
+        contain: true
+      });
+    }
   },
+  mounted() {
+    this.startSlider();
+  }
 };
 </script>
 
 <style lang="scss" scoped>
+@import '~flickity/css/flickity.css';
 .locationsList {
   & {
     position: fixed;
-    top: 0;
-    right: 0;
-    background: rgba(#fff, 0.7);
-    height: 100vh;
-    width: 30vw;
+    bottom: 0;
+    left: 0;
+    background: rgba(#fff, 1);
+    height: 250px;
+    width: 100vw;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -65,10 +68,15 @@ export default {
 
   &__header {
     position: relative;
+    font-size: 1rem;
     z-index: 101;
     background: #fff;
-    padding: 1em 2em;
+    padding: 0.5em 2em;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+
+    h2 {
+      font-size: 18px;
+    }
   }
 
   ul {
@@ -76,6 +84,7 @@ export default {
     margin: 0;
     padding: 0;
     overflow-y: scroll;
+    display: flex;
   }
 }
 </style>
