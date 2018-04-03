@@ -2,7 +2,10 @@
   <transition  v-on:before-enter="beforeEnter">
   <div   
     :v-bind="getHoveredLocation(id)"
-    class='e-marker'>
+    class='e-marker'
+    @click="markerClickHandler"
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave">
     <svg
       class="e-marker__svg"
       version="1.1"
@@ -96,16 +99,16 @@ export default {
   props: {
     iconType: {
       required: true,
-      type: String,
+      type: String
     },
     id: {
       required: true,
-      type: String,
+      type: String
     },
     location: {
       required: true,
-      type: Object,
-    },
+      type: Object
+    }
   },
 
   computed: {
@@ -139,26 +142,26 @@ export default {
               from,
               to,
               stiffness: 300,
-              damping: 10,
+              damping: 10
             });
-          },
+          }
         },
-        closed: { scale: 1 },
+        closed: { scale: 1 }
       };
 
       const childProps = {
         icon: {
           open: { scale: 0 },
-          closed: { scale: 1 },
+          closed: { scale: 1 }
         },
         image: {
           open: { opacity: 1 },
-          closed: { opacity: 0 },
+          closed: { opacity: 0 }
         },
         text: {
           open: { opacity: 1 },
-          closed: { opacity: 0 },
-        },
+          closed: { opacity: 0 }
+        }
       };
 
       const markerPose = pose(this.$el, props);
@@ -179,13 +182,30 @@ export default {
       );
 
       return markerPose;
-    },
+    }
   },
 
   methods: {
+    ...mapActions(['setMapCenter', 'setHoveredLocationId', 'toggleLocationHover']),
     beforeEnter() {
       console.log(this);
     },
+
+    onMouseEnter() {
+      this.setHoveredLocationId(this.location.sys.id);
+    },
+
+    onMouseLeave() {
+      this.setHoveredLocationId(null);
+      this.toggleLocationHover(false);
+    },
+
+    markerClickHandler() {
+      this.setMapCenter([
+        this.location.fields.coordinates.lon,
+        this.location.fields.coordinates.lat
+      ]);
+    }
   },
 
   updated() {
@@ -197,7 +217,7 @@ export default {
       this.markerPoser.set('closed');
       this.parentItem.style.zIndex = '';
     }
-  },
+  }
 };
 </script>
 

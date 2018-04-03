@@ -37,10 +37,7 @@ export default {
     },
 
     coordinates() {
-      return [
-        this.location.fields.coordinates.lon,
-        this.location.fields.coordinates.lat
-      ];
+      return [this.location.fields.coordinates.lon, this.location.fields.coordinates.lat];
     },
 
     getImageUrl() {
@@ -84,6 +81,7 @@ export default {
 
     onClick() {
       if (!this.getActiveLocationId) {
+        console.log(this.id);
         this.setActiveLocationId(this.id);
         this.setMapCenter(this.coordinates);
         this.setZoom(11);

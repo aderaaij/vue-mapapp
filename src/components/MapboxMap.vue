@@ -8,9 +8,7 @@
         v-for="location in getLocationsSorted"
         :key="location.sys.id"
         :ref="'markers'"
-        @mouseenter="onMouseEnter(location)"
-        @mouseleave="onMouseLeave"
-        @click="setMapCenter([location.fields.coordinates.lon, location.fields.coordinates.lat])">
+        >
         <map-marker 
           :class="showMarkers ? 'marker--visible' : 'marker--hidden'"
           :iconType="location.fields.locationType"
@@ -73,15 +71,6 @@ export default {
       'getActiveLocationId'
     ]),
 
-    onMouseEnter(location) {
-      this.setHoveredLocationId(location.sys.id);
-    },
-
-    onMouseLeave() {
-      this.setHoveredLocationId(null);
-      this.toggleLocationHover(false);
-    },
-
     mapInit() {
       if (!this.mapOptions.hasOwnProperty('container')) {
         this.mapOptions.container = 'map';
@@ -116,22 +105,16 @@ export default {
     },
 
     onMarkerOffset(marker) {
-      // offSetMarker(marker, 3, this.theMap);
+      offSetMarker(marker, 3, this.theMap);
     },
 
     addMarkers(map, bounds) {
       this.locations.forEach((location, i) => {
         const markerRef = this.$refs.markers[i];
         new mapboxgl.Marker(markerRef, { offset: [0, -30] })
-          .setLngLat([
-            location.fields.coordinates.lon,
-            location.fields.coordinates.lat
-          ])
+          .setLngLat([location.fields.coordinates.lon, location.fields.coordinates.lat])
           .addTo(map);
-        bounds.extend([
-          location.fields.coordinates.lon,
-          location.fields.coordinates.lat
-        ]);
+        bounds.extend([location.fields.coordinates.lon, location.fields.coordinates.lat]);
       });
       this.setTripBounds(bounds);
     }
