@@ -1,39 +1,49 @@
 import * as types from '@/store/types';
 
 const state = {
+  map: {
+    zoom: 3,
+    center: [-82.98509939999997, 12.2937504],
+    bounds: null,
+    loaded: false
+  },
   dataLoaded: false,
   mapLoaded: false,
-  zoom: 3,
-  center: [-82.98509939999997, 12.2937504],
   hoveredLocationId: null,
   locationHover: false,
   isPanningToMarker: false,
-  tripBounds: null,
   isActiveTeaser: false,
+  isActiveArticle: false,
+  showArticle: false
 };
 
 const getters = {
-  getCenter: state => state.center,
-  getZoom: state => state.zoom,
-  getHoveredLocation: state => id =>
-    state.hoveredLocationId === id ? true : false,
-  getPanningStatus: state => state.isPanningToMarker,
-  getTripBounds: state => state.tripBounds,
   getDataLoaded: state => state.dataLoaded,
   getMapLoaded: state => state.mapLoaded,
+  getCenter: state => state.map.center,
+  getZoom: state => state.map.zoom,
+  getHoveredLocation: state => id => {
+    if (!id) return false;
+    return state.hoveredLocationId === id ? true : false;
+  },
+  locationHover: state => state.locationHover,
+  getPanningStatus: state => state.isPanningToMarker,
+  getTripBounds: state => state.map.bounds,
+  getIfActiveArticle: state => state.isActiveArticle,
+  showArticle: state => state.showArticle
 };
 
 const actions = {
-  setCenter({ commit }, position) {
-    commit(types.SET_CENTER, position);
-  },
-
-  setActiveId({ commit }, id) {
-    commit(types.SET_CENTER);
+  setMapCenter({ commit }, position) {
+    commit(types.SET_MAP_CENTER, position);
   },
 
   setTripBounds({ commit }, bounds) {
     commit(types.SET_TRIP_BOUNDS, bounds);
+  },
+
+  setZoom({ commit }, zoom) {
+    commit(types.SET_ZOOM, zoom);
   },
 
   toggleMapLoaded({ state, commit }) {
@@ -44,19 +54,25 @@ const actions = {
     commit(types.TOGGLE_DATA_LOADED, state.dataLoaded);
   },
 
-  toggleLocationHover({ state, commit }, { active, coordinates, zoom }) {
-    commit(types.TOGGLE_LOCATION_HOVER, active);
-    commit(types.SET_CENTER, coordinates);
-    commit(types.SET_ZOOM, zoom);
+  toggleLocationHover({ commit }, value) {
+    commit(types.TOGGLE_LOCATION_HOVER, value);
   },
 
-  togglePanToMarker({ state, commit }, value) {
+  togglePanToMarker({ commit }, value) {
     commit(types.TOGGLE_PANTOMARKER, value);
   },
 
   setHoveredLocationId({ commit }, id) {
     commit(types.SET_HOVERED_LOCATION_ID, id);
   },
+
+  toggleActiveArticle({ commit }, bool) {
+    commit(types.TOGGLE_ACTIVE_ARTICLE, bool);
+  },
+
+  toggleShowArticle({ commit }, value) {
+    commit(types.SHOW_ARTICLE, value);
+  }
 };
 
 const mutations = {
@@ -66,29 +82,38 @@ const mutations = {
   [types.TOGGLE_MAP_LOADED](state, mapLoaded) {
     state.mapLoaded = !mapLoaded;
   },
-  [types.SET_CENTER](state, center) {
-    state.center = center;
-  },
-  [types.SET_ZOOM](state, zoom) {
-    state.zoom = zoom;
-  },
-  [types.SET_TRIP_BOUNDS](state, bounds) {
-    state.tripBounds = bounds;
-  },
-  [types.SET_HOVERED_LOCATION_ID](state, id) {
-    state.hoveredLocationId = id;
-  },
-  [types.TOGGLE_LOCATION_HOVER](state, locationHover) {
-    state.locationHover = locationHover;
+  [types.TOGGLE_LOCATION_HOVER](state, value) {
+    state.locationHover = value;
   },
   [types.TOGGLE_PANTOMARKER](state, value) {
     state.isPanningToMarker = value;
   },
+  [types.SET_MAP_CENTER](state, center) {
+    state.map.center = center;
+  },
+  [types.SET_ZOOM](state, zoom) {
+    state.map.zoom = zoom;
+  },
+  [types.SET_TRIP_BOUNDS](state, bounds) {
+    state.map.bounds = bounds;
+  },
+  [types.SET_HOVERED_LOCATION_ID](state, id) {
+    state.hoveredLocationId = id;
+  },
+  [types.SET_ACTIVE_ARTICLE_ID](state, id) {
+    state.activeLocationId = id;
+  },
+  [types.TOGGLE_ACTIVE_ARTICLE](state, bool) {
+    state.isActiveArticle = bool;
+  },
+  [types.SHOW_ARTICLE](state, value) {
+    state.showArticle = value;
+  }
 };
 
 export default {
   state,
   getters,
   actions,
-  mutations,
+  mutations
 };

@@ -1,5 +1,5 @@
 <template>
-  <transition  v-on:before-enter="beforeEnter">
+  
   <div   
     :v-bind="getHoveredLocation(id)"
     class='e-marker'
@@ -87,7 +87,6 @@
       </text>
     </svg>
   </div>
-  </transition>
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex';
@@ -112,7 +111,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['getHoveredLocation', 'getImage']),
+    ...mapGetters(['getHoveredLocation', 'getImage', 'getPanningStatus']),
 
     splitTitle() {
       return titleSplit(this.location.fields.title);
@@ -186,10 +185,15 @@ export default {
   },
 
   methods: {
-    ...mapActions(['setMapCenter', 'setHoveredLocationId', 'toggleLocationHover']),
-    beforeEnter() {
-      console.log(this);
-    },
+    ...mapActions([
+      'setMapCenter',
+      'setHoveredLocationId',
+      'toggleLocationHover',
+      'setActiveLocationId',
+      'togglePanToMarker',
+      'toggleActiveArticle',
+      'setZoom'
+    ]),
 
     onMouseEnter() {
       this.setHoveredLocationId(this.location.sys.id);
@@ -201,21 +205,35 @@ export default {
     },
 
     markerClickHandler() {
+      this.togglePanToMarker(true);
+      this.toggleActiveArticle(true);
       this.setMapCenter([
         this.location.fields.coordinates.lon,
         this.location.fields.coordinates.lat
       ]);
+      this.setActiveLocationId(this.id);
+      this.setZoom(11);
+      this.toggleLocationHover(true);
     }
   },
-
+  watch: {
+    getPanningStatus() {
+      if (!this.getPanningStatus) {
+        this.markerPoser.set('closed');
+        this.parentItem.style.zIndex = '';
+      }
+    }
+  },
   updated() {
     if (this.getHoveredLocation(this.id)) {
       this.$emit('marker-offset', this.$el);
       this.markerPoser.set('open');
-      this.parentItem.style.zIndex = 999;
+      this.parentItem.style.zIndex = 501;
     } else {
-      this.markerPoser.set('closed');
-      this.parentItem.style.zIndex = '';
+      if (!this.getPanningStatus) {
+        this.markerPoser.set('closed');
+        this.parentItem.style.zIndex = '';
+      }
     }
   }
 };
@@ -241,6 +259,7 @@ export default {
   &__text {
     font-size: 11px;
     font-family: 'Source Sans Pro', sans-serif;
+    text-shadow: 2px 2px #000;
     font-weight: 700;
     text-align: center;
     color: #fff;

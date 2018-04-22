@@ -1,5 +1,7 @@
 <template>
-  <div class="home">
+  <div 
+    :class="getPanningStatus ? 'home--panning' : ''"
+    class="home">
     <div v-if="getDataLoaded" >
       <mapbox-map
         :locations="getLocations"
@@ -13,7 +15,6 @@
         @map-moveend="onMoveEnd"
       />
       <locations-list :locations="getLocations"/>
-      <!-- <location-article/>   -->
       <Article v-if="getIfActiveArticle"/>
     </div>
     <p v-else>loading</p>
@@ -33,11 +34,10 @@ export default {
   components: {
     MapboxMap,
     LocationsList,
-    Article,
+    Article
   },
 
   computed: {
-    ...mapState(['locationHover', 'isPanningToMarker', 'isActiveArticle']),
     ...mapGetters([
       'getCenter',
       'getTripBounds',
@@ -47,6 +47,9 @@ export default {
       'getLocations',
       'getMapStyle',
       'getIfActiveArticle',
+      'getPanningStatus',
+      'getActiveLocationId',
+      'locationHover'
     ]),
 
     initLoaded() {
@@ -54,7 +57,7 @@ export default {
         return true;
       }
       return false;
-    },
+    }
   },
 
   methods: {
@@ -65,8 +68,9 @@ export default {
       'toggleMapLoaded',
       'toggleLocationHover',
       'togglePanToMarker',
-      'setActiveArticleId',
+      'setActiveLocationid',
       'toggleActiveArticle',
+      'toggleShowArticle'
     ]),
 
     onMapLoaded(map) {
@@ -75,15 +79,11 @@ export default {
       this.fitBounds(map);
     },
 
-    onMoveEnd(map, e) {
-      if (this.isPanningToMarker) {
-        this.togglePanToMarker(false);
-      }
-    },
+    onMoveEnd(map, e) {},
 
     fitBounds(map) {
       map.fitBounds(this.getTripBounds, {
-        padding: { top: 50, bottom: 50, left: 50, right: 50 },
+        padding: { top: 50, bottom: 50, left: 50, right: 50 }
       });
     },
 
@@ -92,10 +92,33 @@ export default {
         this.togglePanToMarker(true);
         map.flyTo({
           center: this.getCenter,
-          zoom: 11,
+          zoom: 11
         });
       }
     },
+
+    disableMap() {
+      this.map.scrollZoom.disable();
+      this.map.boxZoom.disable();
+      this.map.dragPan.disable();
+      this.map.dragRotate.disable();
+      this.map.doubleClickZoom.disable();
+    },
+
+    enableMap() {
+      this.map.scrollZoom.enable();
+      this.map.boxZoom.enable();
+      this.map.dragPan.enable();
+      this.map.dragRotate.enable();
+      this.map.doubleClickZoom.enable();
+    },
+
+    activateArticle() {
+      this.togglePanToMarker(false);
+      this.toggleShowArticle(true);
+      this.map.off('moveend', this.activateArticle);
+      this.enableMap();
+    }
   },
 
   created() {
@@ -109,23 +132,31 @@ export default {
       this.map.flyTo({
         center: this.getCenter,
         speed: 0.7,
-        zoom: this.getZoom,
+        zoom: this.getZoom
       });
-      this.map.scrollZoom.disable();
-      this.map.boxZoom.disable();
-      this.map.dragPan.disable();
-      this.map.dragRotate.disable();
-      this.map.doubleClickZoom.disable();
+      this.disableMap();
       this.map.on('moveend', e => {
         this.toggleLocationHover(false);
       });
     }
-    if (this.isPanningToMarker) {
-      this.map.on('moveend', () => {
-        this.setActiveArticleId(this.getActiveLocationId);
-        this.toggleActiveArticle();
-      });
+
+    if (this.getPanningStatus && this.getActiveLocationId !== null) {
+      this.disableMap();
+      this.map.on('moveend', this.activateArticle);
+      this.toggleLocationHover(false);
     }
-  },
+  }
 };
 </script>
+
+<style lang="scss">
+.home {
+  &--panning {
+    cursor: wait;
+    #map {
+      pointer-events: none;
+      cursor: wait;
+    }
+  }
+}
+</style>

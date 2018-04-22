@@ -1,8 +1,9 @@
 {
   "root": true,
   "extends": [
-    "plugin:vue/recommended"
-    
+    "plugin:vue/essential",
+    "plugin:vue/recommended",
+    "eslint:recommended"
   ],
   "rules": {
     "indent": [

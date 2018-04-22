@@ -60,7 +60,8 @@ export default {
       'toggleLocationHover',
       'setHoveredLocationId',
       'togglePanToMarker',
-      'setActiveLocationId'
+      'setActiveLocationId',
+      'toggleActiveArticle'
     ]),
 
     onMouseEnter() {
@@ -81,7 +82,7 @@ export default {
 
     onClick() {
       if (!this.getActiveLocationId) {
-        console.log(this.id);
+        this.toggleActiveArticle(true);
         this.setActiveLocationId(this.id);
         this.setMapCenter(this.coordinates);
         this.setZoom(11);

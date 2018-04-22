@@ -5,7 +5,7 @@
       :id="(mapOptions.hasOwnProperty('container') ? mapOptions.container : 'map')"
       :ref="'mapdiv'">
       <div        
-        v-for="location in getLocationsSorted"
+        v-for="location in locationsSortedByDate"
         :key="location.sys.id"
         :ref="'markers'"
         >
@@ -49,8 +49,7 @@ export default {
     ...mapState(['zoom', 'center', 'mapLoaded']),
     ...mapGetters({
       myState: 'getCenter',
-      getHoveredLocation: 'getHoveredLocation',
-      getLocationsSorted: 'getLocationsSorted'
+      locationsSortedByDate: 'locationsSortedByDate'
     })
   },
 
@@ -67,7 +66,7 @@ export default {
       'setMapCenter',
       'setTripBounds',
       'toggleLocationHover',
-      'setHoveredLocationId',
+      // 'setHoveredLocationId',
       'getActiveLocationId'
     ]),
 

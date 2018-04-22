@@ -5,7 +5,7 @@
     </header>
     <div ref="slider">
       <div
-        v-for="location in getLocationsSorted" 
+        v-for="location in locationsSortedByDate" 
         :key="location.sys.id">
         <locations-list-item :location="location" />
       </div>
@@ -31,7 +31,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['getLocationsSorted'])
+    ...mapGetters(['locationsSortedByDate'])
   },
   methods: {
     onClick() {
@@ -61,7 +61,7 @@ export default {
     background: rgba(#fff, 1);
     height: 250px;
     width: 100vw;
-    display: flex;
+    display: none;
     flex-direction: column;
     overflow: hidden;
   }
