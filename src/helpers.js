@@ -75,14 +75,8 @@ export function offSetMarker(marker, markerGrowSize, map) {
       offSetX = markerOffSetX - markerMaxWidth;
     }
     // Add `marker.offsetWidth` to this calculation because the position is calculated from top-left
-    if (
-      getWindowXYSize()[0] - markerOffSetX <
-      markerMaxWidth + marker.offsetWidth
-    ) {
-      offSetX =
-        markerMaxWidth +
-        marker.offsetWidth -
-        (getWindowXYSize()[0] - markerOffSetX);
+    if (getWindowXYSize()[0] - markerOffSetX < markerMaxWidth + marker.offsetWidth) {
+      offSetX = markerMaxWidth + marker.offsetWidth - (getWindowXYSize()[0] - markerOffSetX);
     }
 
     map.panBy([offSetX, offSetY]);
@@ -102,19 +96,36 @@ export const playback = () => {
     stop: () => {
       animations.forEach(animation => animation.stop());
       animations.length = 0;
-    },
+    }
   };
 };
 
 export function titleSplit(title) {
   const titleArr = title.split(' ');
-  const titleLast = titleArr.slice(
-    Math.ceil(titleArr.length / 2),
-    titleArr.length
-  );
+  const titleLast = titleArr.slice(Math.ceil(titleArr.length / 2), titleArr.length);
   const titleFirst = titleArr.slice(0, Math.ceil(titleArr.length / 2));
   return {
     first: titleFirst.join(' '),
-    last: titleLast.join(' '),
+    last: titleLast.join(' ')
   };
+}
+
+// https://gist.github.com/codeguy/6684588
+export function stringToSlug(str) {
+  str = str.replace(/^\s+|\s+$/g, ''); // trim
+  str = str.toLowerCase();
+
+  // remove accents, swap ñ for n, etc
+  var from = 'àáäâèéëêìíïîòóöôùúüûñç·/_,:;';
+  var to = 'aaaaeeeeiiiioooouuuunc------';
+  for (var i = 0, l = from.length; i < l; i++) {
+    str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+  }
+
+  str = str
+    .replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+    .replace(/\s+/g, '-') // collapse whitespace and replace by -
+    .replace(/-+/g, '-'); // collapse dashes
+
+  return str;
 }

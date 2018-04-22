@@ -2,7 +2,7 @@
   <div>
     <transition name="slide-fade">
       <article 
-        v-if="showArticle"
+        v-if="showArticle && imageLoaded"
         class="m-article">
         <button 
           @click="close()"
@@ -13,6 +13,9 @@
           </svg>
         </button>
         <div class="m-article__bg" :style="`background-image:url(${imageUrl}?fit=thumb&w=1600&h=900)`">
+          <div class="m-article__title">
+            <h1>{{ currentLocation.fields.title }}</h1>
+          </div>
         </div>
       </article>
     </transition>
@@ -26,8 +29,13 @@ import { tween, styler } from 'popmotion';
 export default {
   name: 'Article',
 
+  data: () => ({
+    imageLoaded: false
+  }),
+
   computed: {
     ...mapGetters(['currentLocation', 'getImage', 'showArticle']),
+
     imageUrl() {
       return this.getImage(this.currentLocation.fields.featuredImage.sys.id);
     }
@@ -45,10 +53,21 @@ export default {
       this.toggleShowArticle(false);
       this.togglePanToMarker(false);
       this.setActiveLocationId(null);
+      this.$router.push('/');
+    },
+
+    checkImageLoaded() {
+      var img = new Image();
+      img.onload = () => {
+        this.imageLoaded = true;
+      };
+      img.src = `${this.imageUrl}?fit=thumb&w=1600&h=900`;
     }
   },
 
   mounted() {
+    this.checkImageLoaded();
+    console.log('article loaded');
     console.log(this.currentLocation);
   }
 };
@@ -79,6 +98,37 @@ export default {
     height: 100vh;
     background-size: cover;
     background-position: center;
+    display: grid;
+    grid-template-columns: 2em repeat(4, 1fr) 2em;
+    grid-template-rows: repeat(6, 1fr);
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+  }
+
+  &__title {
+    position: relative;
+    z-index: 101;
+    grid-column: 2 / 4;
+    grid-row: 5 / 6;
+    display: grid;
+    align-items: center;
+    color: #fff;
+
+    h1 {
+      font-size: 3em;
+      margin: 0;
+      font-weight: 700;
+    }
   }
 }
 

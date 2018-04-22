@@ -92,7 +92,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import pose from 'popmotion-pose';
 import { css, tween, spring, styler, svg, physics } from 'popmotion';
-import { titleSplit } from '@/helpers';
+import { titleSplit, stringToSlug } from '@/helpers';
 
 export default {
   props: {
@@ -205,6 +205,7 @@ export default {
     },
 
     markerClickHandler() {
+      this.$router.push(`/article/${stringToSlug(this.location.fields.title)}`);
       this.togglePanToMarker(true);
       this.toggleActiveArticle(true);
       this.setMapCenter([
