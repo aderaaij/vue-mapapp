@@ -40,7 +40,10 @@ const getters = {
       return dateA - dateB;
     }),
   getActiveLocationId: state => state.activeLocationId,
-  currentTrip: state => state.locations.entry
+  // currentTrip: (state, getters) =>
+  //   state.locations.entry.find(e => e.sys.id === getters.currentLocation.fields.trip.sys.id),
+  currentTrip: state => id => state.locations.entry.find(e => e.sys.id === id),
+  currentCountry: state => id => state.locations.entry.find(e => e.sys.id === id)
 };
 
 const actions = {

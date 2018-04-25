@@ -22,6 +22,7 @@
         <div class="m-article__bg" :style="`background-image:url(${imageUrl}?fit=thumb&w=1600&h=900)`">
           <div class="m-article__title">
             <h1>{{ currentLocation.fields.title }}</h1>
+            <span v-if="trip">{{ trip.fields.title }} </span>
           </div>
         </div>
       </article>
@@ -48,10 +49,15 @@ export default {
   }),
 
   computed: {
-    ...mapGetters(['currentLocation', 'getImage', 'showArticle']),
+    ...mapGetters(['currentLocation', 'getImage', 'showArticle', 'currentTrip']),
 
     imageUrl() {
       return this.getImage(this.currentLocation.fields.featuredImage.sys.id);
+    },
+    trip() {
+      if (this.currentLocation.fields.trip)
+        return this.currentTrip(this.currentLocation.fields.trip.sys.id);
+      return null;
     }
   },
 
@@ -79,7 +85,6 @@ export default {
         closed: { scale: 0, opacity: 0 },
         open: { scale: 1, opacity: 1 }
       });
-      console.log(header);
       return masterPose;
     },
 
@@ -183,6 +188,12 @@ export default {
     text-align: center;
     color: #fff;
 
+    span {
+      font-family: 'garamond-premier-pro-display';
+      font-style: italic;
+      font-size: 1.5em;
+    }
+
     h1 {
       font-size: 6em;
       line-height: 1.1;
@@ -191,23 +202,6 @@ export default {
     }
   }
 }
-
-// .slide-fade-enter-active {
-//   transition: all 0.7s ease;
-//   opacity: 1;
-//   transform: scale(1);
-//   transform-origin: center center;
-// }
-
-// .slide-fade-leave-active {
-//   transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
-// }
-
-// .slide-fade-enter,
-// .slide-fade-leave-to {
-//   transform: scale(0.9);
-//   opacity: 0;
-// }
 </style>
 
 
