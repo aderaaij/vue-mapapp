@@ -39,7 +39,12 @@ export default {
 
   data: () => ({
     elem: null,
-    imageLoaded: false
+    imageLoaded: false,
+    poserConfig: {
+      initialPose: 'closed',
+      open: { opacity: 1, scale: 1, delayChildren: 300 },
+      closed: { opacity: 0, scale: 0.8 }
+    }
   }),
 
   computed: {
@@ -66,14 +71,9 @@ export default {
     },
 
     poser(currentPose) {
-      const poserConfig = {
-        initialPose: 'closed',
-        open: { opacity: 1, scale: 1, delayChildren: 300 },
-        closed: { opacity: 0, scale: 0.8 }
-      };
-      poserConfig.initialPose = currentPose;
+      this.poserConfig.initialPose = currentPose;
       const header = this.elem.querySelector('.m-article__title');
-      const masterPose = pose(this.elem, poserConfig);
+      const masterPose = pose(this.elem, this.poserConfig);
       const headerPose = masterPose.addChild(header, {
         initialPose: 'closed',
         closed: { scale: 0, opacity: 0 },
@@ -84,6 +84,8 @@ export default {
     },
 
     onBeforeEnter(el) {
+      el.style.opacity = 0;
+      el.style.transform = 'scale(0.8)';
       this.elem = el;
     },
 
