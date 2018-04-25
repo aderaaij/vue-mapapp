@@ -1,17 +1,24 @@
 <template>
   <div>
-    <transition name="slide-fade">
+    <transition
+      :css="false"
+      ref="tw"
+      v-on:before-enter="onBeforeEnter"
+      v-on:enter="onEnter"
+      v-on:leave="onLeave">
       <article 
-        v-if="showArticle && imageLoaded"
+        v-if="showArticle"
         class="m-article">
-        <button 
-          @click="close()"
-          class='m-article__close'>
-          <svg fill="#FFFFFF" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-            <path d="M0 0h24v24H0z" fill="none"/>
-          </svg>
-        </button>
+        <div class="m-article__topBar">
+          <button 
+            @click="close()"
+            class='m-article__close'>
+            <svg fill="#FFFFFF" height="44" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+              <path d="M0 0h24v24H0z" fill="none"/>
+            </svg>
+          </button>
+        </div>
         <div class="m-article__bg" :style="`background-image:url(${imageUrl}?fit=thumb&w=1600&h=900)`">
           <div class="m-article__title">
             <h1>{{ currentLocation.fields.title }}</h1>
@@ -24,12 +31,14 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import { tween, styler } from 'popmotion';
+import pose from 'popmotion-pose';
+import { css, tween, spring, styler, svg, physics } from 'popmotion';
 
 export default {
   name: 'Article',
 
   data: () => ({
+    elem: null,
     imageLoaded: false
   }),
 
@@ -50,11 +59,48 @@ export default {
     ]),
 
     close() {
-      this.toggleActiveArticle();
-      this.toggleShowArticle(false);
-      this.togglePanToMarker(false);
       this.setActiveLocationId(null);
-      this.$router.push('/');
+      this.toggleShowArticle(false);
+      this.toggleActiveArticle();
+      this.togglePanToMarker(false);
+    },
+
+    poser(currentPose) {
+      const poserConfig = {
+        initialPose: 'closed',
+        open: { opacity: 1, scale: 1, delayChildren: 300 },
+        closed: { opacity: 0, scale: 0.8 }
+      };
+      poserConfig.initialPose = currentPose;
+      const header = this.elem.querySelector('.m-article__title');
+      const masterPose = pose(this.elem, poserConfig);
+      const headerPose = masterPose.addChild(header, {
+        initialPose: 'closed',
+        closed: { scale: 0, opacity: 0 },
+        open: { scale: 1, opacity: 1 }
+      });
+      console.log(header);
+      return masterPose;
+    },
+
+    onBeforeEnter(el) {
+      this.elem = el;
+    },
+
+    onEnter(el, done) {
+      this.poser('closed')
+        .set('open')
+        .then(() => done());
+    },
+
+    onLeave(el, done) {
+      this.elem = el;
+      this.poser('open')
+        .set('closed')
+        .then(() => {
+          done();
+          this.$router.push('/');
+        });
     },
 
     checkImageLoaded() {
@@ -84,10 +130,21 @@ export default {
     z-index: 901;
   }
 
-  &__close {
+  &__topBar {
     position: absolute;
     top: 0;
-    right: 0;
+    left: 0;
+    width: 100%;
+    height: 64px;
+    border-bottom: 1px solid rgba(#fff, 0.6);
+    display: grid;
+    justify-content: end;
+    align-items: center;
+  }
+
+  &__close {
+    cursor: pointer;
+    margin: 0;
     background: transparent;
     border: none;
   }
@@ -133,20 +190,22 @@ export default {
   }
 }
 
-.slide-fade-enter-active {
-  transition: all 0.7s ease;
-  opacity: 1;
-  transform: scale(1);
-  transform-origin: center center;
-}
-.slide-fade-leave-active {
-  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
-}
-.slide-fade-enter,
-.slide-fade-leave-to {
-  transform: scale(0.9);
-  opacity: 0;
-}
+// .slide-fade-enter-active {
+//   transition: all 0.7s ease;
+//   opacity: 1;
+//   transform: scale(1);
+//   transform-origin: center center;
+// }
+
+// .slide-fade-leave-active {
+//   transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+// }
+
+// .slide-fade-enter,
+// .slide-fade-leave-to {
+//   transform: scale(0.9);
+//   opacity: 0;
+// }
 </style>
 
 
