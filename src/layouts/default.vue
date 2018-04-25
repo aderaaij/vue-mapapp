@@ -151,14 +151,15 @@ export default {
 
 <style lang="scss">
 @import '~normalize.css/normalize.css';
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
-body {
-  font-family: 'Source Sans Pro', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-}
+@import url('https://use.typekit.net/skr1kbv.css');
 
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: 'brandon-grotesque', sans-serif;
+}
 .home {
   &--panning {
     cursor: wait;

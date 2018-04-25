@@ -48,6 +48,7 @@ export default {
       'toggleActiveArticle',
       'setActiveLocationId'
     ]),
+
     close() {
       this.toggleActiveArticle();
       this.toggleShowArticle(false);
@@ -67,8 +68,6 @@ export default {
 
   mounted() {
     this.checkImageLoaded();
-    console.log('article loaded');
-    console.log(this.currentLocation);
   }
 };
 </script>
@@ -118,14 +117,16 @@ export default {
   &__title {
     position: relative;
     z-index: 101;
-    grid-column: 2 / 4;
+    grid-column: 2 / 6;
     grid-row: 5 / 6;
     display: grid;
     align-items: center;
+    text-align: center;
     color: #fff;
 
     h1 {
-      font-size: 3em;
+      font-size: 6em;
+      line-height: 1.1;
       margin: 0;
       font-weight: 700;
     }
