@@ -11,7 +11,6 @@ const state = {
   activeLocationId: null
 };
 /* eslint-disable */
-console.log(process.env);
 const info = {
   space: process.env.VUE_APP_CONTENTFUL_SPACE,
   token: process.env.VUE_APP_CONTENTFUL_TOKEN,
