@@ -1,20 +1,6 @@
 import * as types from '@/store/types';
 import axios from 'axios';
 
-const locationModel = {
-  title: null,
-  slug: null,
-  id: null,
-  locationType: null,
-  contentTypeId: null,
-  coordinates: {},
-  featuredImage: {},
-  trip: {},
-  country: {},
-  datePublication: null,
-  dateArrival: null
-};
-
 const formatLocation = location => ({
   title: location.fields.title,
   slug: location.fields.slug,

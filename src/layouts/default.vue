@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 import MapboxMap from '@/components/MapboxMap';
 import LocationsList from '@/components/LocationsList';
@@ -77,7 +77,7 @@ export default {
       this.fitBounds(map);
     },
 
-    onMoveEnd(map, e) {},
+    // onMoveEnd(map, e) {},
 
     fitBounds(map) {
       map.fitBounds(this.getTripBounds, {
@@ -133,7 +133,7 @@ export default {
         zoom: this.getZoom
       });
       this.disableMap();
-      this.map.on('moveend', e => {
+      this.map.on('moveend', () => {
         this.toggleLocationHover(false);
       });
     }

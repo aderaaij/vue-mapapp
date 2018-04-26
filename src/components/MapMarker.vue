@@ -50,7 +50,8 @@
       <g
         v-else-if="iconType === 'jungle'"
         class="e-marker__icon e-marker__icon--jungle">
-        <path d="M50.1,81.9c-1.7-2.8-2.8-6.1-5.6-8c1.6-0.2,3.2,0.1,4.6-0.5c2.3-0.9,3.2-3.9,2.7-6.3c-0.5-2.5-2.1-4.5-3.7-6.5
+        <path 
+          d="M50.1,81.9c-1.7-2.8-2.8-6.1-5.6-8c1.6-0.2,3.2,0.1,4.6-0.5c2.3-0.9,3.2-3.9,2.7-6.3c-0.5-2.5-2.1-4.5-3.7-6.5
       c-0.8-1.1-1.6-2.1-2.5-3.2c-1.3,2.9,0.1,6.6-1.4,9.4c-0.3,0.5-0.8,1-1.4,0.8c-0.6-0.3-0.3-1.3,0-1.9c1.4-2.5,1.8-5.6,1.3-8.4
       c-0.1-0.5-0.3-1.1-0.6-1.5c-0.3-0.4-0.8-0.7-1.3-0.9c-1.5-0.8-3.1-1.3-4.8-1.6c1.3,1.6,1.6,3.9,1.8,6c0.2,1.7,0.3,3.7-0.9,4.9
       c-0.6-0.3-1.1-0.9-1.1-1.6c-0.1-0.7,0-1.4,0.1-2.1c0.3-2,0.3-4.2-0.9-5.9c-1.5-2.4-5.1-3.1-7.5-1.5c1.9,1.6,3.3,3.8,3.9,6.2
@@ -74,16 +75,16 @@
         opacity="0"
         class="e-marker__text"
         transform="matrix(1 0 0 1 0 13.9998)">
-          <tspan
-            x="50%"
-            :y="[splitTitle.last ? '0' : '13']" >
-            {{ splitTitle.first }}
-          </tspan>
-          <tspan
-            x="50%"
-            y="13" >
-            {{ splitTitle.last }}
-          </tspan>
+        <tspan
+          x="50%"
+          :y="[splitTitle.last ? '0' : '13']" >
+          {{ splitTitle.first }}
+        </tspan>
+        <tspan
+          x="50%"
+          y="13" >
+          {{ splitTitle.last }}
+        </tspan>
       </text>
     </svg>
   </div>
@@ -91,8 +92,8 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import pose from 'popmotion-pose';
-import { css, tween, spring, styler, svg, physics } from 'popmotion';
-import { titleSplit, stringToSlug } from '@/helpers';
+import { spring } from 'popmotion';
+import { titleSplit } from '@/helpers';
 
 export default {
   props: {
@@ -157,20 +158,11 @@ export default {
 
       const markerPose = pose(this.$el, props);
 
-      const iconPose = markerPose.addChild(
-        this.$el.querySelector('.e-marker__icon'),
-        childProps.icon
-      );
+      markerPose.addChild(this.$el.querySelector('.e-marker__icon'), childProps.icon);
 
-      const imagePose = markerPose.addChild(
-        this.$el.querySelector('.e-marker__image'),
-        childProps.image
-      );
+      markerPose.addChild(this.$el.querySelector('.e-marker__image'), childProps.image);
 
-      const textPose = markerPose.addChild(
-        this.$el.querySelector('.e-marker__text'),
-        childProps.text
-      );
+      markerPose.addChild(this.$el.querySelector('.e-marker__text'), childProps.text);
 
       return markerPose;
     }

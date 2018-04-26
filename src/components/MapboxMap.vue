@@ -7,8 +7,7 @@
       <div        
         v-for="location in sortedLocations"
         :key="location.id"
-        :ref="'markers'"
-        >
+        :ref="'markers'">
         <map-marker 
           :class="showMarkers ? 'marker--visible' : 'marker--hidden'"
           :location="location"
@@ -73,7 +72,7 @@ export default {
       return map;
     },
 
-    registerEvents(map, bounds) {
+    registerEvents(map) {
       // Load Event
       map.on('load', () => {
         this.$emit('map-load', map);

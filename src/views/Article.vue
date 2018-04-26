@@ -3,10 +3,10 @@
     <transition
       :css="false"
       ref="tw"
-      v-on:before-enter="onBeforeEnter"
-      v-on:enter="onEnter"
-      v-on:before-leave="onBeforeLeave"
-      v-on:leave="onLeave">
+      @before-enter="onBeforeEnter"
+      @enter="onEnter"
+      @before-leave="onBeforeLeave"
+      @leave="onLeave">
       <article 
         v-if="showArticle"
         class="m-article">
@@ -14,13 +14,22 @@
           <button 
             @click="close()"
             class='m-article__close'>
-            <svg fill="#FFFFFF" height="44" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+            <svg 
+              fill="#FFFFFF"
+              height="44"
+              viewBox="0 0 24 24"
+              width="24" 
+              xmlns="http://www.w3.org/2000/svg">
               <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-              <path d="M0 0h24v24H0z" fill="none"/>
+              <path 
+                d="M0 0h24v24H0z" 
+                fill="none"/>
             </svg>
           </button>
         </div>
-        <div class="m-article__bg" :style="`background-image:url(${imageUrl}?fit=thumb&w=1600&h=900)`">
+        <div 
+          class="m-article__bg"
+          :style="`background-image:url(${imageUrl}?fit=thumb&w=1600&h=900)`">
           <div class="m-article__title">
             <h1>{{ location.title }}</h1>
             <span v-if="trip">{{ trip.fields.title }} </span>
@@ -34,7 +43,6 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import pose from 'popmotion-pose';
-import { css, tween, spring, styler, svg, physics } from 'popmotion';
 
 export default {
   name: 'Article',
@@ -87,7 +95,7 @@ export default {
       this.poserConfig.initialPose = currentPose;
       const header = this.elem.querySelector('.m-article__title');
       const masterPose = pose(this.elem, this.poserConfig);
-      const headerPose = masterPose.addChild(header, {
+      masterPose.addChild(header, {
         initialPose: 'closed',
         closed: { scale: 0, opacity: 0 },
         open: { scale: 1, opacity: 1 }

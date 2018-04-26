@@ -1,6 +1,7 @@
 // ⚙️ HELPERS
 // Get TranslateXY values of added object, returns array `[x, y]`
 // https://stackoverflow.com/questions/21912684/how-to-get-value-of-translatex-and-translatey
+/* eslint-ignore-file */
 export function getComputedTranslateXY(obj) {
   const transArr = [];
   if (!window.getComputedStyle) return;
