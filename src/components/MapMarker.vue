@@ -1,7 +1,7 @@
 <template>
   
   <div   
-    :v-bind="getHoveredLocation(id)"
+    :v-bind="getHoveredLocation(location.id)"
     class='e-marker'
     @click="markerClickHandler"
     @mouseenter="onMouseEnter"
@@ -44,7 +44,7 @@
       M23.9,57.6c-7.9,7.9-7.9,20.7,0,28.6l5.7-5.7C23.4,74.2,21.3,65.5,23.9,57.6z M23.9,57.6L23.9,57.6c-0.8,6,2.3,13.8,8.6,20.1
       L44,66.2C37.7,59.9,30,56.8,23.9,57.6z"/>
       <path
-        v-else-if="iconType === 'mountain'"
+        v-else-if="iconType === 'mountain' || iconType == 'volcano'"
         class="e-marker__icon e-marker__icon--mountain"
         d="M39.5,58.8l-6.6,8.8l5,6.7l-2.8,2.1c-3-3.9-7.9-10.5-7.9-10.5l-10.5,14h38.6L39.5,58.8z"/>
       <g
@@ -96,14 +96,6 @@ import { titleSplit, stringToSlug } from '@/helpers';
 
 export default {
   props: {
-    iconType: {
-      required: true,
-      type: String
-    },
-    id: {
-      required: true,
-      type: String
-    },
     location: {
       required: true,
       type: Object
@@ -114,19 +106,19 @@ export default {
     ...mapGetters(['getHoveredLocation', 'getImage', 'getPanningStatus']),
 
     splitTitle() {
-      return titleSplit(this.location.fields.title);
-    },
-
-    images() {
-      return this.location.properties.images;
+      return titleSplit(this.location.title);
     },
 
     image() {
-      return this.getImage(this.location.fields.featuredImage.sys.id);
+      return this.getImage(this.location.featuredImage.id);
     },
 
     parentItem() {
       return this.$el.parentNode;
+    },
+
+    iconType() {
+      return this.location.locationType;
     },
 
     markerPoser() {
@@ -196,7 +188,7 @@ export default {
     ]),
 
     onMouseEnter() {
-      this.setHoveredLocationId(this.location.sys.id);
+      this.setHoveredLocationId(this.location.id);
     },
 
     onMouseLeave() {
@@ -205,18 +197,16 @@ export default {
     },
 
     markerClickHandler() {
-      this.$router.push(`/article/${stringToSlug(this.location.fields.title)}`);
+      this.$router.push(`/${this.location.slug}`);
       this.togglePanToMarker(true);
       this.toggleActiveArticle(true);
-      this.setMapCenter([
-        this.location.fields.coordinates.lon,
-        this.location.fields.coordinates.lat
-      ]);
-      this.setActiveLocationId(this.id);
+      this.setMapCenter([this.location.coordinates.lon, this.location.coordinates.lat]);
+      this.setActiveLocationId(this.location.id);
       this.setZoom(11);
       this.toggleLocationHover(true);
     }
   },
+
   watch: {
     getPanningStatus() {
       if (!this.getPanningStatus) {
@@ -226,7 +216,7 @@ export default {
     }
   },
   updated() {
-    if (this.getHoveredLocation(this.id)) {
+    if (this.getHoveredLocation(this.location.id)) {
       this.$emit('marker-offset', this.$el);
       this.markerPoser.set('open');
       this.parentItem.style.zIndex = 501;

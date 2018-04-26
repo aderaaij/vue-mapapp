@@ -1,6 +1,34 @@
 import * as types from '@/store/types';
 import axios from 'axios';
 
+const locationModel = {
+  title: null,
+  slug: null,
+  id: null,
+  locationType: null,
+  contentTypeId: null,
+  coordinates: {},
+  featuredImage: {},
+  trip: {},
+  country: {},
+  datePublication: null,
+  dateArrival: null
+};
+
+const formatLocation = location => ({
+  title: location.fields.title,
+  slug: location.fields.slug,
+  id: location.sys.id,
+  dateArrival: location.fields.arrivalDate,
+  locationType: location.fields.locationType,
+  contentTypeId: location.sys.contentType.sys.id,
+  coordinates: location.fields.coordinates,
+  featuredImage: location.fields.featuredImage.sys,
+  trip: location.fields.trip.sys,
+  country: location.fields.country.sys,
+  dateCreated: location.sys.createdAt
+});
+
 const state = {
   mapStyle: null,
   locations: {
@@ -18,6 +46,7 @@ const info = {
 };
 /* eslint-enable */
 const mapStyle = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/22914/map_dark-matter.json';
+
 const instance = axios.create({
   baseURL: `${info.url}${info.space}`,
   headers: { Authorization: `Bearer ${info.token}` }
@@ -26,8 +55,8 @@ const instance = axios.create({
 const getters = {
   getMapStyle: state => state.mapStyle,
   getLocations: state => state.locations.items,
-  currentLocation: state => {
-    return state.locations.items.find(i => i.sys.id === state.activeLocationId);
+  currentLocation: (state, getters) => {
+    return getters.locationsFormatted.find(i => i.id === state.activeLocationId);
   },
   getImage: state => id => {
     const imageObj = state.locations.assets.find(i => i.sys.id === id);
@@ -37,6 +66,13 @@ const getters = {
     state.locations.items.sort((a, b) => {
       const dateA = new Date(a.fields.arrivalDate);
       const dateB = new Date(b.fields.arrivalDate);
+      return dateA - dateB;
+    }),
+  locationsFormatted: state => state.locations.items.map(loc => formatLocation(loc)),
+  locationsFormmatedSorted: (state, getters) =>
+    getters.locationsFormatted.sort((a, b) => {
+      const dateA = new Date(a.dateArrival);
+      const dateB = new Date(b.dateArrival);
       return dateA - dateB;
     }),
   getActiveLocationId: state => state.activeLocationId,
@@ -52,7 +88,7 @@ const actions = {
       axios
         .get(mapStyle)
         .then(res => {
-          resolve();
+          resolve(res);
           commit(types.SET_MAPSTYLE, res.data);
         })
         /* eslint-disable-next-line */

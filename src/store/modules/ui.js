@@ -50,8 +50,8 @@ const actions = {
     commit(types.TOGGLE_MAP_LOADED, state.mapLoaded);
   },
 
-  toggleDataLoaded({ state, commit }) {
-    commit(types.TOGGLE_DATA_LOADED, state.dataLoaded);
+  toggleDataLoaded({ commit }, value) {
+    commit(types.TOGGLE_DATA_LOADED, value);
   },
 
   toggleLocationHover({ commit }, value) {
@@ -76,8 +76,8 @@ const actions = {
 };
 
 const mutations = {
-  [types.TOGGLE_DATA_LOADED](state, dataLoaded) {
-    state.dataLoaded = !dataLoaded;
+  [types.TOGGLE_DATA_LOADED](state, value) {
+    state.dataLoaded = value;
   },
   [types.TOGGLE_MAP_LOADED](state, mapLoaded) {
     state.mapLoaded = !mapLoaded;

@@ -5,6 +5,7 @@
       ref="tw"
       v-on:before-enter="onBeforeEnter"
       v-on:enter="onEnter"
+      v-on:before-leave="onBeforeLeave"
       v-on:leave="onLeave">
       <article 
         v-if="showArticle"
@@ -21,7 +22,7 @@
         </div>
         <div class="m-article__bg" :style="`background-image:url(${imageUrl}?fit=thumb&w=1600&h=900)`">
           <div class="m-article__title">
-            <h1>{{ currentLocation.fields.title }}</h1>
+            <h1>{{ location.title }}</h1>
             <span v-if="trip">{{ trip.fields.title }} </span>
           </div>
         </div>
@@ -49,14 +50,19 @@ export default {
   }),
 
   computed: {
-    ...mapGetters(['currentLocation', 'getImage', 'showArticle', 'currentTrip']),
+    ...mapGetters({
+      location: 'currentLocation',
+      getImage: 'getImage',
+      showArticle: 'showArticle',
+      currentTrip: 'currentTrip'
+    }),
 
     imageUrl() {
-      return this.getImage(this.currentLocation.fields.featuredImage.sys.id);
+      return this.getImage(this.location.featuredImage.id);
     },
+
     trip() {
-      if (this.currentLocation.fields.trip)
-        return this.currentTrip(this.currentLocation.fields.trip.sys.id);
+      if (this.location.trip) return this.currentTrip(this.location.trip.id);
       return null;
     }
   },
@@ -74,6 +80,7 @@ export default {
       this.toggleShowArticle(false);
       this.toggleActiveArticle();
       this.togglePanToMarker(false);
+      this.$router.push('/');
     },
 
     poser(currentPose) {
@@ -100,13 +107,14 @@ export default {
         .then(() => done());
     },
 
+    onBeforeLeave() {},
+
     onLeave(el, done) {
       this.elem = el;
       this.poser('open')
         .set('closed')
         .then(() => {
           done();
-          this.$router.push('/');
         });
     },
 

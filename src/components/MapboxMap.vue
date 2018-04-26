@@ -5,17 +5,14 @@
       :id="(mapOptions.hasOwnProperty('container') ? mapOptions.container : 'map')"
       :ref="'mapdiv'">
       <div        
-        v-for="location in locationsSortedByDate"
-        :key="location.sys.id"
+        v-for="location in sortedLocations"
+        :key="location.id"
         :ref="'markers'"
         >
         <map-marker 
           :class="showMarkers ? 'marker--visible' : 'marker--hidden'"
-          :iconType="location.fields.locationType"
-          :id="location.sys.id"
           :location="location"
-          @marker-offset="onMarkerOffset"
-          />
+          @marker-offset="onMarkerOffset"/>
       </div>
     </div>
   </div>
@@ -35,10 +32,6 @@ export default {
   },
 
   props: {
-    locations: {
-      required: true,
-      type: Array
-    },
     mapOptions: {
       type: Object,
       required: true
@@ -49,7 +42,7 @@ export default {
     ...mapState(['zoom', 'center', 'mapLoaded']),
     ...mapGetters({
       myState: 'getCenter',
-      locationsSortedByDate: 'locationsSortedByDate'
+      sortedLocations: 'locationsFormmatedSorted'
     })
   },
 
@@ -108,12 +101,12 @@ export default {
     },
 
     addMarkers(map, bounds) {
-      this.locations.forEach((location, i) => {
+      this.sortedLocations.forEach((location, i) => {
         const markerRef = this.$refs.markers[i];
         new mapboxgl.Marker(markerRef, { offset: [0, -30] })
-          .setLngLat([location.fields.coordinates.lon, location.fields.coordinates.lat])
+          .setLngLat([location.coordinates.lon, location.coordinates.lat])
           .addTo(map);
-        bounds.extend([location.fields.coordinates.lon, location.fields.coordinates.lat]);
+        bounds.extend([location.coordinates.lon, location.coordinates.lat]);
       });
       this.setTripBounds(bounds);
     }

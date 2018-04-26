@@ -6,7 +6,6 @@
       class="home">
       <div v-if="getDataLoaded" >
         <mapbox-map
-          :locations="getLocations"
           :map-options="{
             style: getMapStyle,
             center: getCenter,
@@ -44,7 +43,6 @@ export default {
       'getZoom',
       'getDataLoaded',
       'getMapLoaded',
-      'getLocations',
       'getMapStyle',
       'getIfActiveArticle',
       'getPanningStatus',
@@ -122,9 +120,9 @@ export default {
   },
 
   created() {
-    Promise.all([this.setMapStyle(), this.setLocations()]).then(() => {
-      this.toggleDataLoaded();
-    });
+    // Promise.all([this.setMapStyle(), this.setLocations()]).then(() => {
+    //   this.toggleDataLoaded();
+    // });
   },
 
   updated() {
