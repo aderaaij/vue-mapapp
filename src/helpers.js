@@ -39,7 +39,7 @@ export function getClosest(elem, selector) {
       function(s) {
         var matches = (this.document || this.ownerDocument).querySelectorAll(s),
           i = matches.length;
-        while (--i >= 0 && matches.item(i) !== this) {}
+        while (--i >= 0 && matches.item(i) !== this) {} // eslint-disable-line
         return i > -1;
       };
   }

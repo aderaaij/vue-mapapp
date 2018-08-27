@@ -79,17 +79,17 @@ export default {
         this.showMarkers = true;
       });
 
-      //Map Mouse Move
+      // Map Mouse Move
       map.on('mousemove', e => {
         this.$emit('map-mousemove', map, e);
       });
 
-      //Map Move End
+      // Map Move End
       map.on('moveend', e => {
         this.$emit('map-moveend', map, e);
       });
 
-      //Map Clicked
+      // Map Clicked
       map.on('click', e => {
         this.$emit('map-click', map, e);
       });

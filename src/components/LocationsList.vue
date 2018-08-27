@@ -35,9 +35,10 @@ export default {
   },
   methods: {
     onClick() {
-      console.log('click');
+      console.log('click'); // eslint-disable-line
     },
     startSlider() {
+      // eslint-disable-next-line
       const flkty = new Flickity(this.$refs.slider, {
         // options
         cellAlign: 'left',

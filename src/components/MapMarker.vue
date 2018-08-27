@@ -64,6 +64,22 @@
       M33.2,71.4c-0.5,0.3-1.1,0.4-1.6,0.6c-0.8,0.2-1.5,0.3-2.3,0.3c1.6-0.7,3.2-1.3,4.8-1.9h-0.1c0.1-0.1,0.3,0,0.4,0.1
       C34.2,71,33.7,71.2,33.2,71.4z"/>
       </g>
+      <g 
+        class="e-marker__spinner"
+        opacity="0"
+        :class="{'e-marker__spinner--active': getPanningStatus}">
+        <path 
+          class="e-marker__spinner-spin"
+          fill="currentColor" 
+          d="M45.36,61a13.42,13.42,0,1,0,3.48,12.9H45.36A10,10,0,1,1,35.9,60.5a9.89,9.89,0,0,1,7.1,3l-5.42,5.3H49.29V57.07Z" 
+          transform="translate(0 0)"/>
+        <!-- <path 
+          d="M8.15,8.13h18.7V26.82H8.15Z" 
+          fill="none"/> -->
+        <!-- <path 
+          d="M0 0h24v24H0z" 
+          fill="none"/> -->
+      </g>
       <image
         opacity="0"
         class="e-marker__image"
@@ -92,7 +108,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import pose from 'popmotion-pose';
-import { spring } from 'popmotion';
+import { spring, tween } from 'popmotion';
 import { titleSplit } from '@/helpers';
 
 export default {
@@ -148,22 +164,30 @@ export default {
         },
         image: {
           open: { opacity: 1 },
+          loading: { opacity: 0 },
           closed: { opacity: 0 }
         },
         text: {
           open: { opacity: 1 },
           closed: { opacity: 0 }
+        },
+        spinner: {
+          open: { rotate: 0 },
+          loading: {
+            rotate: 360,
+            transition: ({ from, to }) => {
+              console.log(from);
+              return tween({ from, to, loop: Infinity });
+            }
+          },
+          closed: { rotate: 0 }
         }
       };
 
       const markerPose = pose(this.$el, props);
-
-      markerPose.addChild(this.$el.querySelector('.e-marker__icon'), childProps.icon);
-
-      markerPose.addChild(this.$el.querySelector('.e-marker__image'), childProps.image);
-
-      markerPose.addChild(this.$el.querySelector('.e-marker__text'), childProps.text);
-
+      Object.keys(childProps).forEach(key =>
+        markerPose.addChild(this.$el.querySelector(`.e-marker__${key}`), childProps[key])
+      );
       return markerPose;
     }
   },
@@ -212,6 +236,9 @@ export default {
       this.$emit('marker-offset', this.$el);
       this.markerPoser.set('open');
       this.parentItem.style.zIndex = 501;
+      if (this.getPanningStatus) {
+        this.markerPoser.set('loading');
+      }
     } else {
       if (!this.getPanningStatus) {
         this.markerPoser.set('closed');
@@ -226,6 +253,14 @@ export default {
 .e-marker {
   & {
     transform-origin: bottom center;
+  }
+
+  &__spinner {
+    opacity: 0;
+
+    &--active {
+      opacity: 1;
+    }
   }
 
   &__svg {

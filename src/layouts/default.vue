@@ -149,7 +149,7 @@ export default {
 
 <style lang="scss">
 @import '~normalize.css/normalize.css';
-@import url('https://use.typekit.net/skr1kbv.css');
+@import url('https://use.typekit.net/xrz4evd.css');
 
 h1,
 h2,
