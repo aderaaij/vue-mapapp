@@ -176,7 +176,7 @@ export default {
           loading: {
             rotate: 360,
             transition: ({ from, to }) => {
-              console.log(from);
+              // console.log(from);
               return tween({ from, to, loop: Infinity });
             }
           },

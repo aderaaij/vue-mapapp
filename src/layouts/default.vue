@@ -77,7 +77,7 @@ export default {
       this.fitBounds(map);
     },
 
-    // onMoveEnd(map, e) {},
+    onMoveEnd(map, e) {},
 
     fitBounds(map) {
       map.fitBounds(this.getTripBounds, {

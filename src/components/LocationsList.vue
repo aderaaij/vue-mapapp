@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     onClick() {
-      console.log('click'); // eslint-disable-line
+      // console.log('click'); // eslint-disable-line
     },
     startSlider() {
       // eslint-disable-next-line
