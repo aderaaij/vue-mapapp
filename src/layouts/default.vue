@@ -17,14 +17,16 @@
         />
         <!-- <locations-list :locations="getLocations"/> -->
       </div>
-      <p v-else>loading</p>
+      <p v-else>
+        <loading/>
+      </p>
     </div>
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-
+import Loading from '@/components/Loading';
 import MapboxMap from '@/components/MapboxMap';
 import LocationsList from '@/components/LocationsList';
 
@@ -33,7 +35,8 @@ export default {
 
   components: {
     MapboxMap,
-    LocationsList
+    LocationsList,
+    Loading
   },
 
   computed: {
