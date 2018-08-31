@@ -70,8 +70,7 @@ export default {
     },
 
     trip() {
-      if (this.location.trip) return this.currentTrip(this.location.trip.id);
-      return null;
+      return this.location.trip ? this.currentTrip(this.location.trip.id) : null;
     }
   },
 
