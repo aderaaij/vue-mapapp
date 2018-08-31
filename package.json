@@ -19,6 +19,7 @@
     "popmotion-pose": "^2.0.6",
     "vue": "^2.5.13",
     "vue-extend-layout": "1.0.1",
+    "vue-markdown": "^2.2.4",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
   },

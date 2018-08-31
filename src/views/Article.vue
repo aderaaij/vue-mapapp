@@ -14,17 +14,7 @@
           <button 
             @click="close()"
             class='m-article__close'>
-            <svg 
-              fill="#FFFFFF"
-              height="44"
-              viewBox="0 0 24 24"
-              width="24" 
-              xmlns="http://www.w3.org/2000/svg">
-              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-              <path 
-                d="M0 0h24v24H0z" 
-                fill="none"/>
-            </svg>
+            <icon-close />
           </button>
         </div>
         <div 
@@ -32,8 +22,16 @@
           :style="`background-image:url(${imageUrl}?fit=thumb&w=1600&h=900)`">
           <div class="m-article__title">
             <h1>{{ location.title }}</h1>
-            <span v-if="trip">{{ trip.fields.title }} </span>
+            <span v-if="trip">{{ trip.fields.title }}</span>
           </div>
+        </div>
+        <div 
+          v-if="location.content"
+          class="m-article__content">
+          <vue-markdown 
+            :prerender="val => onPreRender(val)"
+            :postrender="val => onPostRender(val)"
+            class="entry-content">{{ location.content }}</vue-markdown>
         </div>
       </article>
     </transition>
@@ -42,10 +40,18 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import VueMarkdown from 'vue-markdown';
 import pose from 'popmotion-pose';
+
+import IconClose from '@/assets/icons/close.svg';
 
 export default {
   name: 'Article',
+
+  components: {
+    VueMarkdown,
+    IconClose
+  },
 
   data: () => ({
     elem: null,
@@ -81,6 +87,23 @@ export default {
       'toggleActiveArticle',
       'setActiveLocationId'
     ]),
+
+    onPreRender(val) {
+      return val;
+    },
+
+    onPostRender(val) {
+      const el = document.createElement('div');
+      el.innerHTML = val;
+      const images = Array.from(el.querySelectorAll('img'));
+      images.forEach(img => {
+        const p = img.closest('p');
+        // el.insertBefore(img, p);
+        // p.remove();
+        p.classList.add('entry-content__imageContainer');
+      });
+      return el.innerHTML;
+    },
 
     close() {
       this.setActiveLocationId(null);
@@ -215,6 +238,29 @@ export default {
       margin: 0;
       font-weight: 700;
     }
+  }
+
+  &__content {
+    display: grid;
+    width: 100%;
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+  }
+}
+
+.entry-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr minmax(640px, 1fr) 1fr 1fr;
+
+  > *:not(.entry-content__imageContainer) {
+    grid-column: 3 / span 1;
+  }
+
+  &__imageContainer {
+    grid-column: 3 / -1;
   }
 }
 </style>
