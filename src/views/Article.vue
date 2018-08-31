@@ -98,10 +98,16 @@ export default {
       const images = Array.from(el.querySelectorAll('img'));
       images.forEach(img => {
         const p = img.closest('p');
-        // el.insertBefore(img, p);
-        // p.remove();
-        p.classList.add('entry-content__imageContainer');
+        const figure = document.createElement('figure');
+        figure.classList.add('entry-content__imageContainer');
+        figure.appendChild(img);
+        el.insertBefore(figure, p);
+        el.removeChild(p);
       });
+
+      // Remove empty paragraphs
+      const ps = Array.from(el.querySelectorAll('p'));
+      ps.forEach(p => (p.innerText === '' ? el.removeChild(p) : p));
       return el.innerHTML;
     },
 
@@ -199,6 +205,7 @@ export default {
     height: 100vh;
     background-size: cover;
     background-position: center;
+    margin-bottom: 3rem;
     display: grid;
     grid-template-columns: 2em repeat(4, 1fr) 2em;
     grid-template-rows: repeat(6, 1fr);
@@ -253,14 +260,45 @@ export default {
 
 .entry-content {
   display: grid;
-  grid-template-columns: 1fr 1fr minmax(640px, 1fr) 1fr 1fr;
+  grid-template-columns:
+    [full-start] minmax(1rem, 1fr) 1fr
+    [main-start] minmax(0, 40em) [main-end]
+    1fr minmax(1rem, 1fr) [full-end];
+  font-family: 'source-sans-pro', sans-serif;
+
+  p {
+    line-height: 1.5;
+    font-size: 1.25rem;
+  }
+  h1 {
+    font-size: 3rem;
+  }
+  h2 {
+    font-size: 2.5rem;
+  }
+  h3 {
+    font-size: 2rem;
+    margin-bottom: 0;
+  }
+
+  figure {
+    margin: 0;
+  }
+
+  figcaption {
+    font-family: 'garamond-premier-pro-display';
+    font-size: 1.25rem;
+    line-height: 1.5em;
+  }
 
   > *:not(.entry-content__imageContainer) {
-    grid-column: 3 / span 1;
+    grid-column: main;
   }
 
   &__imageContainer {
-    grid-column: 3 / -1;
+    grid-column: main-start / full-end;
+    display: grid;
+    padding-right: 1rem;
   }
 }
 </style>
