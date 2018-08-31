@@ -23,8 +23,11 @@ const router = new Router({
         const { slug } = to.params;
         const location = store.getters.locationsFormatted.find(l => l.slug === slug);
         if (from.name === null) {
+          store.dispatch('setMapCenter', [location.coordinates.lon, location.coordinates.lat]);
           store.dispatch('setActiveLocationId', location.id);
           store.dispatch('toggleShowArticle', true);
+          store.dispatch('toggleActiveArticle', true);
+          store.dispatch('setZoom', 11);
         }
         next();
       }
@@ -33,7 +36,7 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.path == from.path && to.hash !== '') return;
+  if (to.path === from.path && to.hash !== '') return;
   // if (!store.getters.getDataLoaded) {
   const map = store.dispatch('setMapStyle');
   const data = store.dispatch('setLocations');

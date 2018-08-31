@@ -54,10 +54,7 @@ export default {
     ]),
 
     initLoaded() {
-      if (this.getDataLoaded && this.getMapLoaded) {
-        return true;
-      }
-      return false;
+      return this.getDataLoaded && this.getMapLoaded ? true : false;
     }
   },
 
@@ -119,17 +116,9 @@ export default {
       this.toggleShowArticle(true);
       this.map.off('moveend', this.activateArticle);
       this.enableMap();
-    }
-  },
+    },
 
-  created() {
-    // Promise.all([this.setMapStyle(), this.setLocations()]).then(() => {
-    //   this.toggleDataLoaded();
-    // });
-  },
-
-  updated() {
-    if (this.initLoaded && this.locationHover) {
+    flyToMarker() {
       this.map.flyTo({
         center: this.getCenter,
         speed: 0.7,
@@ -140,11 +129,38 @@ export default {
         this.toggleLocationHover(false);
       });
     }
+  },
 
-    if (this.getPanningStatus && this.getActiveLocationId !== null) {
-      this.disableMap();
-      this.map.on('moveend', this.activateArticle);
-      this.toggleLocationHover(false);
+  created() {
+    // Promise.all([this.setMapStyle(), this.setLocations()]).then(() => {
+    //   this.toggleDataLoaded();
+    // });
+  },
+
+  watch: {
+    getMapLoaded: function(newValue) {
+      if (newValue && this.getDataLoaded && this.getIfActiveArticle) {
+        this.map.flyTo({
+          center: this.getCenter,
+          speed: 0.7,
+          zoom: this.getZoom
+        });
+      }
+    }
+  },
+
+  updated() {
+    switch (true) {
+      case this.initLoaded && this.locationHover:
+        this.flyToMarker();
+        break;
+      case this.getPanningStatus && this.getMapLoaded && this.getActiveLocationId !== null:
+        this.disableMap();
+        this.map.on('moveend', this.activateArticle);
+        this.toggleLocationHover(false);
+        break;
+      default:
+        return;
     }
   }
 };
