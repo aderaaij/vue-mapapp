@@ -205,7 +205,6 @@ export default {
     height: 100vh;
     background-size: cover;
     background-position: center;
-    margin-bottom: 3rem;
     display: grid;
     grid-template-columns: 2em repeat(4, 1fr) 2em;
     grid-template-rows: repeat(6, 1fr);
@@ -250,6 +249,7 @@ export default {
   &__content {
     display: grid;
     width: 100%;
+    padding-top: 3em;
 
     img {
       display: block;
