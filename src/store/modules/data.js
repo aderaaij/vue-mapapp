@@ -1,18 +1,19 @@
 import * as types from '@/store/types';
 import axios from 'axios';
 
-const formatLocation = location => ({
-  title: location.fields.title,
-  slug: location.fields.slug,
-  id: location.sys.id,
-  dateArrival: location.fields.arrivalDate,
-  locationType: location.fields.locationType,
-  contentTypeId: location.sys.contentType.sys.id,
-  coordinates: location.fields.coordinates,
-  featuredImage: location.fields.featuredImage.sys,
-  trip: location.fields.trip.sys,
-  country: location.fields.country.sys,
-  dateCreated: location.sys.createdAt
+const formatLocation = ({ fields, sys }) => ({
+  title: fields.title ? fields.title : null,
+  slug: fields.slug ? fields.slug : null,
+  id: sys.id ? sys.id : null,
+  dateArrival: fields.arrivalDate ? fields.arrivalDate : null,
+  locationType: fields.locationType ? fields.locationType : null,
+  contentTypeId: sys.contentType.sys.id,
+  coordinates: fields.coordinates,
+  featuredImage: fields.featuredImage.sys,
+  trip: fields.trip.sys,
+  country: fields.country.sys,
+  dateCreated: sys.createdAt,
+  content: fields.content ? fields.content : null
 });
 
 const state = {
@@ -41,20 +42,19 @@ const instance = axios.create({
 const getters = {
   getMapStyle: state => state.mapStyle,
   getLocations: state => state.locations.items,
-  currentLocation: (state, getters) => {
-    return getters.locationsFormatted.find(i => i.id === state.activeLocationId);
-  },
+  currentLocation: (state, getters) =>
+    getters.locationsFormatted.find(i => i.id === state.activeLocationId),
   getImage: state => id => {
     const imageObj = state.locations.assets.find(i => i.sys.id === id);
     return imageObj.fields.file.url;
   },
-  locationsSortedByDate: state =>
-    state.locations.items.sort((a, b) => {
+  locationsSortedByDate: ({ locations }) =>
+    locations.items.sort((a, b) => {
       const dateA = new Date(a.fields.arrivalDate);
       const dateB = new Date(b.fields.arrivalDate);
       return dateA - dateB;
     }),
-  locationsFormatted: state => state.locations.items.map(loc => formatLocation(loc)),
+  locationsFormatted: ({ locations }) => locations.items.map(loc => formatLocation(loc)),
   locationsFormmatedSorted: (state, getters) =>
     getters.locationsFormatted.sort((a, b) => {
       const dateA = new Date(a.dateArrival);
