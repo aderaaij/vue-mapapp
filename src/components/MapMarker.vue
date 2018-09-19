@@ -66,7 +66,6 @@
       </g>
       <g 
         class="e-marker__spinner"
-        opacity="0"
         :class="{'e-marker__spinner--active': getPanningStatus}">
         <path 
           class="e-marker__spinner-spin"
@@ -108,7 +107,7 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import pose from 'popmotion-pose';
-import { spring, tween } from 'popmotion';
+import { spring, tween, easing } from 'popmotion';
 import { titleSplit } from '@/helpers';
 
 export default {
@@ -160,6 +159,7 @@ export default {
       const childProps = {
         icon: {
           open: { scale: 0 },
+          loading: { scale: 0 },
           closed: { scale: 1 }
         },
         image: {
@@ -172,15 +172,14 @@ export default {
           closed: { opacity: 0 }
         },
         spinner: {
-          open: { rotate: 0 },
+          open: { rotate: 0, opacity: 0 },
+          openLoader: { rotate: 0, opacity: 1 },
           loading: {
             rotate: 360,
-            transition: ({ from, to }) => {
-              // console.log(from);
-              return tween({ from, to, loop: Infinity });
-            }
+            transition: ({ from, to }) =>
+              tween({ from, to, loop: Infinity, duration: 900, ease: easing.linear })
           },
-          closed: { rotate: 0 }
+          closed: { rotate: 0, opacity: 0 }
         }
       };
 
@@ -237,6 +236,7 @@ export default {
       this.markerPoser.set('open');
       this.parentItem.style.zIndex = 501;
       if (this.getPanningStatus) {
+        this.markerPoser.set('openLoader');
         this.markerPoser.set('loading');
       }
     } else {
@@ -256,11 +256,11 @@ export default {
   }
 
   &__spinner {
-    opacity: 0;
+    // opacity: 0;
 
-    &--active {
-      opacity: 1;
-    }
+    // &--active {
+    //   opacity: 1;
+    // }
   }
 
   &__svg {

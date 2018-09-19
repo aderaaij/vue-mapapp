@@ -1,5 +1,14 @@
 import * as types from '@/store/types';
 import axios from 'axios';
+import mapStyle from '@/assets/map_dark-matter.json';
+// console.log(mapStyle.sources.openmaptiles);
+
+const mapStyleAndKey = (mapStyle) => {
+  const newObj = {...mapStyle};
+  newObj.sources.openmaptiles.url = `https://free.tilehosting.com/data/v3.json?key=${process.env.VUE_APP_MAPTILER_TOKEN}`; // eslint-disable-line
+  newObj.glyphs = `https://free.tilehosting.com/fonts/{fontstack}/{range}.pbf?key=${process.env.VUE_APP_MAPTILER_TOKEN}`; // eslint-disable-line
+  return newObj; 
+}
 
 const formatLocation = ({ fields, sys }) => ({
   title: fields.title ? fields.title : null,
@@ -32,7 +41,7 @@ const info = {
   url: process.env.VUE_APP_CONTENTFUL_BASE
 };
 /* eslint-enable */
-const mapStyle = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/22914/map_dark-matter.json';
+// const mapStyle = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/22914/map_dark-matter.json';
 
 const instance = axios.create({
   baseURL: `${info.url}${info.space}`,
@@ -40,12 +49,12 @@ const instance = axios.create({
 });
 
 const getters = {
-  getMapStyle: state => state.mapStyle,
-  getLocations: state => state.locations.items,
-  currentLocation: (state, getters) =>
-    getters.locationsFormatted.find(i => i.id === state.activeLocationId),
-  getImage: state => id => {
-    const imageObj = state.locations.assets.find(i => i.sys.id === id);
+  getMapStyle: ({ mapStyle }) => mapStyle,
+  getLocations: ({ locations }) => locations.items,
+  currentLocation: ({ activeLocationId }, getters) =>
+    getters.locationsFormatted.find(i => i.id === activeLocationId),
+  getImage: ({ locations }) => id => {
+    const imageObj = locations.assets.find(i => i.sys.id === id);
     return imageObj.fields.file.url;
   },
   locationsSortedByDate: ({ locations }) =>
@@ -61,25 +70,26 @@ const getters = {
       const dateB = new Date(b.dateArrival);
       return dateA - dateB;
     }),
-  getActiveLocationId: state => state.activeLocationId,
+  getActiveLocationId: ({ activeLocationId }) => activeLocationId,
   // currentTrip: (state, getters) =>
   //   state.locations.entry.find(e => e.sys.id === getters.currentLocation.fields.trip.sys.id),
-  currentTrip: state => id => state.locations.entry.find(e => e.sys.id === id),
-  currentCountry: state => id => state.locations.entry.find(e => e.sys.id === id)
+  currentTrip: ({ locations }) => id => locations.entry.find(e => e.sys.id === id),
+  currentCountry: ({ locations }) => id => locations.entry.find(e => e.sys.id === id)
 };
 
 const actions = {
   setMapStyle({ commit }) {
-    return new Promise(resolve => {
-      axios
-        .get(mapStyle)
-        .then(res => {
-          resolve(res);
-          commit(types.SET_MAPSTYLE, res.data);
-        })
-        /* eslint-disable-next-line */
-        .catch(console.log);
-    });
+    commit(types.SET_MAPSTYLE, mapStyleAndKey(mapStyle))
+    // return new Promise(resolve => {
+    //   axios
+    //     .get(mapStyle)
+    //     .then(res => {
+    //       resolve(res);
+    //       commit(types.SET_MAPSTYLE, res.data);
+    //     })
+    //     /* eslint-disable-next-line */
+    //     .catch(console.log);
+    // });
   },
 
   setLocations({ commit }) {
