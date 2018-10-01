@@ -1,7 +1,6 @@
 import * as types from '@/store/types';
 import axios from 'axios';
 import mapStyle from '@/assets/map_dark-matter.json';
-// console.log(mapStyle.sources.openmaptiles);
 
 const mapStyleAndKey = (mapStyle) => {
   const newObj = {...mapStyle};
@@ -41,7 +40,6 @@ const info = {
   url: process.env.VUE_APP_CONTENTFUL_BASE
 };
 /* eslint-enable */
-// const mapStyle = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/22914/map_dark-matter.json';
 
 const instance = axios.create({
   baseURL: `${info.url}${info.space}`,
@@ -80,16 +78,6 @@ const getters = {
 const actions = {
   setMapStyle({ commit }) {
     commit(types.SET_MAPSTYLE, mapStyleAndKey(mapStyle))
-    // return new Promise(resolve => {
-    //   axios
-    //     .get(mapStyle)
-    //     .then(res => {
-    //       resolve(res);
-    //       commit(types.SET_MAPSTYLE, res.data);
-    //     })
-    //     /* eslint-disable-next-line */
-    //     .catch(console.log);
-    // });
   },
 
   setLocations({ commit }) {
