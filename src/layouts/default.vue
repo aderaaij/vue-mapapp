@@ -138,7 +138,7 @@ export default {
   },
 
   watch: {
-    getMapLoaded: function(newValue) {
+    getMapLoaded(newValue) {
       if (newValue && this.getDataLoaded && this.getIfActiveArticle) {
         this.map.flyTo({
           center: this.getCenter,
@@ -153,6 +153,7 @@ export default {
     switch (true) {
       case this.initLoaded && this.locationHover:
         this.flyToMarker();
+        this.toggleLocationHover(false);
         break;
       case this.getPanningStatus && this.getMapLoaded && this.getActiveLocationId !== null:
         this.disableMap();
