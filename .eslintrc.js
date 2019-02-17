@@ -1,12 +1,18 @@
 module.exports = {
   root: true,
   parserOptions: {
-    parser: 'babel-eslint'
+    parser: 'babel-eslint',
   },
   env: {
-    browser: true
+    browser: true,
+    node: true,
   },
-  extends: ['eslint:recommended', 'plugin:vue/strongly-recommended', 'plugin:vue/essential'],
+  extends: [
+    'eslint:recommended',
+    'plugin:prettier/recommended',
+    'plugin:vue/strongly-recommended',
+    'plugin:vue/essential',
+  ],
   // required to lint *.vue files
   plugins: ['vue'],
   // add your custom rules here
@@ -14,6 +20,6 @@ module.exports = {
     // allow async-await
     'generator-star-spacing': 'off',
     // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
-  }
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+  },
 };

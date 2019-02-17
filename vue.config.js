@@ -8,15 +8,15 @@ module.exports = {
         {
           from: path.resolve('./copy'),
           to: './',
-          ignore: ['.*']
-        }
-      ])
+          ignore: ['.*'],
+        },
+      ]),
     ],
     resolve: {
       alias: {
-        vue$: 'vue/dist/vue.esm.js'
-      }
-    }
+        vue$: 'vue/dist/vue.esm.js',
+      },
+    },
   },
   chainWebpack: config => {
     const svgRule = config.module.rule('svg');
@@ -24,5 +24,5 @@ module.exports = {
     svgRule.uses.clear();
 
     svgRule.use('vue-svg-loader').loader('vue-svg-loader');
-  }
+  },
 };
