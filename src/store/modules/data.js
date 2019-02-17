@@ -2,12 +2,16 @@ import * as types from '@/store/types';
 import axios from 'axios';
 import mapStyle from '@/assets/map_dark-matter.json';
 
-const mapStyleAndKey = (mapStyle) => {
-  const newObj = {...mapStyle};
-  newObj.sources.openmaptiles.url = `https://free.tilehosting.com/data/v3.json?key=${process.env.VUE_APP_MAPTILER_TOKEN}`; // eslint-disable-line
-  newObj.glyphs = `https://free.tilehosting.com/fonts/{fontstack}/{range}.pbf?key=${process.env.VUE_APP_MAPTILER_TOKEN}`; // eslint-disable-line
-  return newObj; 
-}
+const mapStyleAndKey = mapStyle => {
+  const newObj = { ...mapStyle };
+  newObj.sources.openmaptiles.url = `https://free.tilehosting.com/data/v3.json?key=${
+    process.env.VUE_APP_MAPTILER_TOKEN
+  }`; // eslint-disable-line
+  newObj.glyphs = `https://free.tilehosting.com/fonts/{fontstack}/{range}.pbf?key=${
+    process.env.VUE_APP_MAPTILER_TOKEN
+  }`; // eslint-disable-line
+  return newObj;
+};
 
 const formatLocation = ({ fields, sys }) => ({
   title: fields.title ? fields.title : null,
@@ -21,7 +25,7 @@ const formatLocation = ({ fields, sys }) => ({
   trip: fields.trip.sys,
   country: fields.country.sys,
   dateCreated: sys.createdAt,
-  content: fields.content ? fields.content : null
+  content: fields.content ? fields.content : null,
 });
 
 const state = {
@@ -29,21 +33,21 @@ const state = {
   locations: {
     assets: [],
     entry: [],
-    items: []
+    items: [],
   },
-  activeLocationId: null
+  activeLocationId: null,
 };
 /* eslint-disable */
 const info = {
   space: process.env.VUE_APP_CONTENTFUL_SPACE,
   token: process.env.VUE_APP_CONTENTFUL_TOKEN,
-  url: process.env.VUE_APP_CONTENTFUL_BASE
+  url: process.env.VUE_APP_CONTENTFUL_BASE,
 };
 /* eslint-enable */
 
 const instance = axios.create({
   baseURL: `${info.url}${info.space}`,
-  headers: { Authorization: `Bearer ${info.token}` }
+  headers: { Authorization: `Bearer ${info.token}` },
 });
 
 const getters = {
@@ -61,7 +65,8 @@ const getters = {
       const dateB = new Date(b.fields.arrivalDate);
       return dateA - dateB;
     }),
-  locationsFormatted: ({ locations }) => locations.items.map(loc => formatLocation(loc)),
+  locationsFormatted: ({ locations }) =>
+    locations.items.map(loc => formatLocation(loc)),
   locationsFormmatedSorted: (state, getters) =>
     getters.locationsFormatted.sort((a, b) => {
       const dateA = new Date(a.dateArrival);
@@ -71,13 +76,20 @@ const getters = {
   getActiveLocationId: ({ activeLocationId }) => activeLocationId,
   // currentTrip: (state, getters) =>
   //   state.locations.entry.find(e => e.sys.id === getters.currentLocation.fields.trip.sys.id),
-  currentTrip: ({ locations }) => id => locations.entry.find(e => e.sys.id === id),
-  currentCountry: ({ locations }) => id => locations.entry.find(e => e.sys.id === id)
+  currentTrip: ({ locations }) => id =>
+    locations.entry.find(e => e.sys.id === id),
+  currentCountry: ({ locations }) => id =>
+    locations.entry.find(e => e.sys.id === id),
 };
 
 const actions = {
   setMapStyle({ commit }) {
-    commit(types.SET_MAPSTYLE, mapStyleAndKey(mapStyle))
+    commit(
+      types.SET_MAPSTYLE,
+      `https://maps.tilehosting.com/styles/hybrid/style.json?key=${
+        process.env.VUE_APP_MAPTILER_TOKEN
+      }`
+    );
   },
 
   setLocations({ commit }) {
@@ -86,15 +98,15 @@ const actions = {
         .get('/entries', {
           params: {
             include: 1,
-            content_type: 'location'
-          }
+            content_type: 'location',
+          },
         })
         .then(res => {
           const { items } = res.data;
           commit(types.SET_LOCATIONS, {
             items,
             assets: res.data.includes.Asset,
-            entry: res.data.includes.Entry
+            entry: res.data.includes.Entry,
           });
           resolve(items);
         })
@@ -105,7 +117,7 @@ const actions = {
 
   setActiveLocationId({ commit }, id) {
     commit(types.SET_ACTIVE_LOCATION_ID, id);
-  }
+  },
 };
 
 const mutations = {
@@ -119,12 +131,12 @@ const mutations = {
 
   [types.SET_ACTIVE_LOCATION_ID](state, id) {
     state.activeLocationId = id;
-  }
+  },
 };
 
 export default {
   state,
   getters,
   actions,
-  mutations
+  mutations,
 };
