@@ -264,11 +264,11 @@ export default {
   }
 
   &__spinner {
-    /* opacity: 0; */
+    opacity: 0;
 
-    // &--active {
-    //   opacity: 1;
-    // }
+    &--active {
+      opacity: 1;
+    }
   }
 
   &__svg {
