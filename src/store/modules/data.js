@@ -2,14 +2,10 @@ import * as types from '@/store/types';
 import axios from 'axios';
 import mapStyle from '@/assets/map_dark-matter.json';
 
-const mapStyleAndKey = mapStyle => {
+const mapStyleAndKey = (mapStyle) => {
   const newObj = { ...mapStyle };
-  newObj.sources.openmaptiles.url = `https://free.tilehosting.com/data/v3.json?key=${
-    process.env.VUE_APP_MAPTILER_TOKEN
-  }`; // eslint-disable-line
-  newObj.glyphs = `https://free.tilehosting.com/fonts/{fontstack}/{range}.pbf?key=${
-    process.env.VUE_APP_MAPTILER_TOKEN
-  }`; // eslint-disable-line
+  newObj.sources.openmaptiles.url = `https://free.tilehosting.com/data/v3.json?key=${process.env.VUE_APP_MAPTILER_TOKEN}`; // eslint-disable-line
+  newObj.glyphs = `https://free.tilehosting.com/fonts/{fontstack}/{range}.pbf?key=${process.env.VUE_APP_MAPTILER_TOKEN}`; // eslint-disable-line
   return newObj;
 };
 
@@ -54,9 +50,9 @@ const getters = {
   getMapStyle: ({ mapStyle }) => mapStyle,
   getLocations: ({ locations }) => locations.items,
   currentLocation: ({ activeLocationId }, getters) =>
-    getters.locationsFormatted.find(i => i.id === activeLocationId),
-  getImage: ({ locations }) => id => {
-    const imageObj = locations.assets.find(i => i.sys.id === id);
+    getters.locationsFormatted.find((i) => i.id === activeLocationId),
+  getImage: ({ locations }) => (id) => {
+    const imageObj = locations.assets.find((i) => i.sys.id === id);
     return imageObj.fields.file.url;
   },
   locationsSortedByDate: ({ locations }) =>
@@ -66,7 +62,7 @@ const getters = {
       return dateA - dateB;
     }),
   locationsFormatted: ({ locations }) =>
-    locations.items.map(loc => formatLocation(loc)),
+    locations.items.map((loc) => formatLocation(loc)),
   locationsFormmatedSorted: (state, getters) =>
     getters.locationsFormatted.sort((a, b) => {
       const dateA = new Date(a.dateArrival);
@@ -76,24 +72,22 @@ const getters = {
   getActiveLocationId: ({ activeLocationId }) => activeLocationId,
   // currentTrip: (state, getters) =>
   //   state.locations.entry.find(e => e.sys.id === getters.currentLocation.fields.trip.sys.id),
-  currentTrip: ({ locations }) => id =>
-    locations.entry.find(e => e.sys.id === id),
-  currentCountry: ({ locations }) => id =>
-    locations.entry.find(e => e.sys.id === id),
+  currentTrip: ({ locations }) => (id) =>
+    locations.entry.find((e) => e.sys.id === id),
+  currentCountry: ({ locations }) => (id) =>
+    locations.entry.find((e) => e.sys.id === id),
 };
 
 const actions = {
   setMapStyle({ commit }) {
     commit(
       types.SET_MAPSTYLE,
-      `https://maps.tilehosting.com/styles/hybrid/style.json?key=${
-        process.env.VUE_APP_MAPTILER_TOKEN
-      }`
+      `https://api.maptiler.com/maps/hybrid/style.json?key=${process.env.VUE_APP_MAPTILER_TOKEN}`
     );
   },
 
   setLocations({ commit }) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       instance
         .get('/entries', {
           params: {
@@ -101,7 +95,7 @@ const actions = {
             content_type: 'location',
           },
         })
-        .then(res => {
+        .then((res) => {
           const { items } = res.data;
           commit(types.SET_LOCATIONS, {
             items,
