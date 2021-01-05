@@ -8,7 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "contentful": "^7.0.0",
     "date-fns": "^1.29.0",
     "flickity": "^2.1.0",
